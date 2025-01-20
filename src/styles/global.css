@@ -1,0 +1,30 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Nohemi+Black&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nohemi+Black&family=Nohemi:ital,wght@0,100..900;1,100..900&display=swap'); */
+
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap");
+@import url("https://db.onlinewebfonts.com/c/29ddb4605533a38e086b48fa105e0d12?family=Nohemi");
+@font-face {
+  font-family: "Nohemi";
+  src: url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.eot");
+  src: url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.svg#Nohemi") format("svg");
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: auto;
+  margin: auto;
+  font-family: "Nohemi";
+  font-weight: 400;
+  overflow-x: clip;
+}
+
+* {
+  font-family: "Nohemi";
+}

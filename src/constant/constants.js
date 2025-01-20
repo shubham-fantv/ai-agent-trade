@@ -1,0 +1,4 @@
+const FANTV_API_URL = process.env.NEXT_PUBLIC_FANTV_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+export { FANTV_API_URL, API_BASE_URL };
