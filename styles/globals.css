@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
 
@@ -7,15 +11,19 @@
   src: url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.eot");
   src: url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.eot?#iefix")
       format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff2") format("woff2"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff") format("woff"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.ttf") format("truetype"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.svg#Nohemi") format("svg");
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff2")
+      format("woff2"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff")
+      format("woff"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.ttf")
+      format("truetype"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.svg#Nohemi")
+      format("svg");
 }
 
 @font-face {
   font-family: "Nohemi";
-  src: url("../public/fonts/Nohemi-Black.woff");
+  src: url("../public/fonts/Nohemi-Medium.woff");
   font-display: swap;
   descent-override: 0%;
 }
@@ -57,4 +65,13 @@ a {
 
 img {
   max-width: 100%;
+}
+
+
+.bg-gradient {
+  background: linear-gradient(180deg, #8b9b3e 0%, #5a6428 100%);
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }

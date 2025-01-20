@@ -7,7 +7,7 @@ import SnackBar from "@/src/component/Snackbar";
 import AppSeo from "../src/seo/app";
 import { Provider } from "react-redux";
 import store from "../src/redux/store";
-import "../src/styles/global.css";
+import "@/styles/globals.css";
 import "animate.css";
 import { WalletProvider, SuiWallet } from "@suiet/wallet-kit";
 

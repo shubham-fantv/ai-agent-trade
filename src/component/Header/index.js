@@ -59,7 +59,10 @@ const RevampHeader = ({ app }) => {
   const isMobile = useIsMobile(app?.deviceParsedInfo?.device?.isMobile);
 
   const toggleDrawer = (open) => (event) => {
-    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
       return;
     }
     setIsMenuOpen(open);
@@ -82,7 +85,10 @@ const RevampHeader = ({ app }) => {
         sx={{ gap: 2, alignItems: "center", padding: 2 }}
         onClick={toggleDrawer(false)}
       >
-        <img style={{ height: "32px", width: "32px" }} src="/images/close.svg" />
+        <img
+          style={{ height: "32px", width: "32px" }}
+          src="/images/close.svg"
+        />
       </Box>
       <Box sx={styles.mobileScroll}>
         <Box
@@ -171,12 +177,18 @@ const RevampHeader = ({ app }) => {
           <Box display="flex">
             <Box
               className="nav-logo"
-              onClick={() => window?.open(`https://fantv.world`, "_blank", "noopener,noreferrer")}
+              onClick={() =>
+                window?.open(
+                  `https://fantv.world`,
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
             >
               {isMobile ? (
                 <Box className="fan__TigerMobileLogo">
                   <img
-                    src={"/images/fantv-new/logo.svg"}
+                    src="/images/footer-logo.png"
                     alt="mobile FanTV logo"
                     loading="eager"
                     decoding="async"
@@ -185,7 +197,7 @@ const RevampHeader = ({ app }) => {
               ) : (
                 <Box className="fan__tigerDekstopLogo">
                   <img
-                    src={"/images/fantv-new/logo.svg"}
+                    src="/images/footer-logo.png"
                     alt="FanTV Logo"
                     width={140}
                     loading="eager"
@@ -196,7 +208,12 @@ const RevampHeader = ({ app }) => {
             </Box>
             {!isMobile && (
               <Box display="flex" sx={{ gap: 2, alignItems: "center" }}>
-                <Box display={"flex"} height={"auto"} gap="20px" alignItems="center">
+                <Box
+                  display={"flex"}
+                  height={"auto"}
+                  gap="20px"
+                  alignItems="center"
+                >
                   <Typography
                     variant="h6"
                     className="nav-item"
@@ -279,7 +296,10 @@ const RevampHeader = ({ app }) => {
                   </Button>
                 )}
               </Box>
-              <WalletConnectModal anchorEl={walletAnchorEl} onClose={handleWalletClose} />
+              <WalletConnectModal
+                anchorEl={walletAnchorEl}
+                onClose={handleWalletClose}
+              />
             </Box>
           )}
 
@@ -289,13 +309,22 @@ const RevampHeader = ({ app }) => {
             </Box>
           )}
 
-          <Drawer anchor="right" open={isMenuOpen} onClose={toggleDrawer(false)}>
+          <Drawer
+            anchor="right"
+            open={isMenuOpen}
+            onClose={toggleDrawer(false)}
+          >
             {drawerContent}
           </Drawer>
 
           {!isMobile && (
             <Box display="flex" sx={{ gap: 2, alignItems: "center" }}>
-              <Box display={"flex"} height={"auto"} gap="10px" alignItems="center">
+              <Box
+                display={"flex"}
+                height={"auto"}
+                gap="10px"
+                alignItems="center"
+              >
                 <Box sx={styles.btnContainer} onClick={handleWalletClick}>
                   <img src="/images/rocket-launch.svg" />
                   {wallet.connected ? (
@@ -323,7 +352,10 @@ const RevampHeader = ({ app }) => {
                     </Button>
                   )}
                 </Box>
-                <WalletConnectModal anchorEl={walletAnchorEl} onClose={handleWalletClose} />
+                <WalletConnectModal
+                  anchorEl={walletAnchorEl}
+                  onClose={handleWalletClose}
+                />
               </Box>
             </Box>
           )}
