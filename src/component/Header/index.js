@@ -14,13 +14,13 @@ import styles from "./style";
 const LogOutNavItem = [
   {
     path: "/airdrop",
-    title: "Airdrop ",
+    title: "Airdrop",
     icon: "/images/fantv/menu/reward.svg",
     newTag: false,
   },
   {
     path: "/",
-    title: "Whitepaper ",
+    title: "Whitepaper",
     icon: "/images/fantv/menu/reward.svg",
     newTag: true,
   },
@@ -73,7 +73,8 @@ const RevampHeader = ({ app }) => {
       sx={{
         width: 250,
         height: "100%",
-        background: "white",
+        background: "#1E1E1E", // Dark background for drawer
+        color: "#FFFFFF", // Light text for contrast
         backdropFilter: "blur(40px)",
       }}
       role="presentation"
@@ -98,7 +99,7 @@ const RevampHeader = ({ app }) => {
             flexDirection: "column",
             alignItems: "center",
             padding: 2,
-            borderBottom: "1px solid #e0e0e0",
+            borderBottom: "1px solid #333333",
           }}
         >
           <Box sx={styles.pointContainer}>
@@ -110,7 +111,7 @@ const RevampHeader = ({ app }) => {
             <Typography
               variant="h6"
               sx={{
-                color: "#000000",
+                color: "#FFFFFF", // Light text color
                 fontFamily: "Nohemi",
                 fontSize: "16px",
                 fontWeight: 500,
@@ -127,7 +128,7 @@ const RevampHeader = ({ app }) => {
               justifyContent="space-between"
               alignItems="center"
               padding={2}
-              borderBottom="1px solid #e0e0e0"
+              borderBottom="1px solid #333333"
               onClick={() => {
                 setIsMenuOpen(false);
               }}
@@ -136,7 +137,7 @@ const RevampHeader = ({ app }) => {
                 variant="h6"
                 className="nav-item"
                 sx={{
-                  color: router.pathname === item?.path ? "#000000" : "#000000",
+                  color: router.pathname === item?.path ? "#FFD700" : "#FFFFFF", // Highlight active item
                   fontFamily: "Nohemi",
                   fontSize: "16px",
                   fontWeight: 500,
@@ -149,12 +150,12 @@ const RevampHeader = ({ app }) => {
                   <Box
                     sx={{
                       marginLeft: "10px",
-                      backgroundColor: "rgb(225, 64, 132)",
+                      backgroundColor: "#FF5722", // Accent color
                       padding: "2px 5px",
                       borderRadius: "10px",
                       fontSize: "8px",
                       fontWeight: 700,
-                      color: "rgb(255, 255, 255)",
+                      color: "#FFFFFF",
                       textAlign: "center",
                       display: "inline-block",
                     }}
@@ -172,7 +173,14 @@ const RevampHeader = ({ app }) => {
 
   return (
     <>
-      <Box sx={styles.navbar} onClick={(e) => e.stopPropagation()}>
+      <Box
+        sx={{
+          ...styles.navbar,
+          backgroundColor: "#1E1E1E", // Dark navbar background
+          color: "#FFFFFF", // Light text for navbar
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Box className="nav-container">
           <Box display="flex">
             <Box
@@ -213,68 +221,37 @@ const RevampHeader = ({ app }) => {
                   height={"auto"}
                   gap="20px"
                   alignItems="center"
+                  className="cursor-pointer"
                 >
-                  <Typography
-                    variant="h6"
-                    className="nav-item"
-                    sx={{
-                      color: "#000000",
-                      display: "flex",
-                      fontFamily: "Nohemi",
-                      fontSize: "16px",
-                    }}
-                  >
-                    Launch App
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    className="nav-item"
-                    sx={{
-                      color: "#000000",
-                      display: "flex",
-                      fontFamily: "Nohemi",
-                      fontSize: "16px",
-                    }}
-                  >
-                    Trade
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    className="nav-item"
-                    sx={{
-                      color: "#000000",
-                      display: "flex",
-                      fontFamily: "Nohemi",
-                      fontSize: "16px",
-                    }}
-                  >
-                    Hire
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    className="nav-item"
-                    sx={{
-                      color: "#000000",
-                      display: "flex",
-                      fontFamily: "Nohemi",
-                      fontSize: "16px",
-                    }}
-                  >
-                    Build New Agent
-                  </Typography>
+                  {["Launch App", "Trade", "Hire", "Build New Agent"].map(
+                    (label) => (
+                      <Typography
+                        key={label}
+                        variant="h6"
+                        className="nav-item"
+                        sx={{
+                          color: "#FFFFFF",
+                          display: "flex",
+                          fontFamily: "Nohemi",
+                          fontSize: "16px",
+                        }}
+                      >
+                        {label}
+                      </Typography>
+                    )
+                  )}
                 </Box>
               </Box>
             )}
           </Box>
-
-          {isMobile && (
+          {!isMobile && (
             <Box>
               <Box sx={styles.btnContainer} onClick={handleWalletClick}>
                 <img src="/images/rocket-launch.svg" />
                 {wallet.connected ? (
                   <Button
                     sx={{
-                      color: "#000000",
+                      color: "#FFFFFF", // Light text for button
                       fontFamily: "Nohemi",
                       fontSize: "16px",
                       "&:hover": {
@@ -287,7 +264,7 @@ const RevampHeader = ({ app }) => {
                 ) : (
                   <Button
                     sx={{
-                      color: "#000000",
+                      color: "#FFFFFF", // Light text for button
                       fontFamily: "Nohemi",
                       fontSize: "16px",
                     }}
@@ -302,13 +279,6 @@ const RevampHeader = ({ app }) => {
               />
             </Box>
           )}
-
-          {isMobile && (
-            <Box sx={styles.profileNavBar} onClick={toggleDrawer(true)}>
-              <img src="/images/menu.svg" />
-            </Box>
-          )}
-
           <Drawer
             anchor="right"
             open={isMenuOpen}
@@ -316,49 +286,6 @@ const RevampHeader = ({ app }) => {
           >
             {drawerContent}
           </Drawer>
-
-          {!isMobile && (
-            <Box display="flex" sx={{ gap: 2, alignItems: "center" }}>
-              <Box
-                display={"flex"}
-                height={"auto"}
-                gap="10px"
-                alignItems="center"
-              >
-                <Box sx={styles.btnContainer} onClick={handleWalletClick}>
-                  <img src="/images/rocket-launch.svg" />
-                  {wallet.connected ? (
-                    <Button
-                      sx={{
-                        color: "#000000",
-                        fontFamily: "Nohemi",
-                        fontSize: "16px",
-                        "&:hover": {
-                          backgroundColor: "transparent",
-                        },
-                      }}
-                    >
-                      {formatWalletAddress(wallet?.address)}
-                    </Button>
-                  ) : (
-                    <Button
-                      sx={{
-                        color: "#000000",
-                        fontFamily: "Nohemi",
-                        fontSize: "16px",
-                      }}
-                    >
-                      Connect Wallet
-                    </Button>
-                  )}
-                </Box>
-                <WalletConnectModal
-                  anchorEl={walletAnchorEl}
-                  onClose={handleWalletClose}
-                />
-              </Box>
-            </Box>
-          )}
         </Box>
       </Box>
     </>
