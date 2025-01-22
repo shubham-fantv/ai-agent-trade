@@ -11,14 +11,10 @@
   src: url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.eot");
   src: url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.eot?#iefix")
       format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff2")
-      format("woff2"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff")
-      format("woff"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.ttf")
-      format("truetype"),
-    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.svg#Nohemi")
-      format("svg");
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/29ddb4605533a38e086b48fa105e0d12.svg#Nohemi") format("svg");
 }
 
 @font-face {
@@ -66,7 +62,6 @@ a {
 img {
   max-width: 100%;
 }
-
 
 .bg-gradient {
   background: linear-gradient(180deg, #8b9b3e 0%, #5a6428 100%);

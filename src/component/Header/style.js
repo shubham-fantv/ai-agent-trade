@@ -524,13 +524,14 @@ const styles = {
     border: "1px solid #FFF",
     background:
       "linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.16) 100%)",
-    borderRadius: "40px",
+    borderRadius: "12px",
     padding: "0px",
     alignItems: "center",
     height: "40px",
     textTransform: "none",
     display: "flex",
     cursor: "pointer",
+    backgroundColor: "#FFF",
     "& button": {
       color: "#1E1E1E",
       fontWeight: "600",

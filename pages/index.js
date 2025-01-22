@@ -1,5 +1,10 @@
 import Head from "next/head";
 import { useState } from "react";
+import { useQuery } from "react-query";
+
+import fetcher from "@/src/dataProvider";
+import { FANTV_API_URL } from "@/src/constant/constants";
+import { formatWalletAddress } from "../src/utils/common";
 
 const agents = [
   {
@@ -83,6 +88,16 @@ const agents = [
 ];
 
 export default function Home() {
+  const [tradeResult, setTradeResult] = useState();
+  console.log("🚀 ~ Home ~ tradeResult:", tradeResult);
+
+  useQuery(`/trade/dashboard`, () => fetcher.get(`${FANTV_API_URL}/v1/trade/dashboard`), {
+    refetchOnMount: "always",
+    onSuccess: ({ data }) => {
+      setTradeResult(data);
+    },
+  });
+
   const [activeTab, setActiveTab] = useState("all");
 
   return (
@@ -93,9 +108,7 @@ export default function Home() {
       </Head>
 
       <main className="max-w-[1200px] mx-auto">
-        <h1 className="text-2xl font-semibold text-center mb-6">
-          Trade AI Agents
-        </h1>
+        <h1 className="text-2xl font-semibold text-center mb-6">Trade AI Agents</h1>
 
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b p-6 pb-8 from-[#CCFF00]/50 to-[#1E1E1E]">
           <div className="absolute inset-0 bg-noise opacity-[0.15]"></div>
@@ -107,9 +120,7 @@ export default function Home() {
                 <button
                   className={`px-6 py-1.5 rounded-full text-sm font-medium transition-all
                     ${
-                      activeTab === "all"
-                        ? "bg-white text-olive shadow-inner"
-                        : "hover:bg-white/10"
+                      activeTab === "all" ? "bg-white text-olive shadow-inner" : "hover:bg-white/10"
                     }`}
                   onClick={() => setActiveTab("all")}
                 >
@@ -183,21 +194,22 @@ export default function Home() {
 
             {/* Agents List */}
             <div className="rounded-xl overflow-hidden bg-[#1E1E1E] backdrop-blur-sm text-sm">
-              {agents.map((agent, idx) => (
-                <div
-                  key={agent.id}
-                  className={`grid grid-cols-7 px-4 py-3 items-center hover:bg-black/20 transition-colors
+              {tradeResult?.agentsRes?.map((agent, idx) => (
+                <a
+                  key={agent?.id}
+                  className={`grid grid-cols-7 px-4 py-4 items-center hover:bg-black/20 transition-colors
                     ${idx !== 0 ? "border-t border-white/5" : ""}`}
+                  href="/agent-details"
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-[48px] w-[48px] rounded-[8px] bg-blue-500 flex items-center justify-center p-4">
-                      {agent.initial}
+                      <img src={agent?.agent} className="h-[48px] w-[48px]" />
                     </div>
                     <div>
-                      <div className="font-medium flex items-center gap-1">
-                        {agent.name}
-                        <span className="text-[10px] px-1.5 rounded bg-black/20 text-[#9BB03F]">
-                          {agent.tag}
+                      <div className=" text-[14px] font-normal flex items-center">
+                        {agent?.name}
+                        <span className="text-[12px] px-1.5 rounded bg-black/20 ">
+                          {agent?.ticker}
                         </span>
                         <svg
                           width="18"
@@ -207,13 +219,7 @@ export default function Home() {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <circle cx="9" cy="9" r="8" fill="#242424" />
-                          <circle
-                            cx="9"
-                            cy="9"
-                            r="8.5"
-                            stroke="white"
-                            stroke-opacity="0.2"
-                          />
+                          <circle cx="9" cy="9" r="8.5" stroke="white" stroke-opacity="0.2" />
                           <path
                             d="M8.99972 7.81615C9.11892 8.08403 9.27324 8.32062 9.47612 8.52348C9.67901 8.72634 9.91566 8.88065 10.1836 8.99984C9.91579 9.11895 9.67926 9.27316 9.47644 9.47592C9.27345 9.67885 9.11908 9.91557 8.99986 10.1836C8.88067 9.91584 8.72638 9.67932 8.52355 9.47653C8.32063 9.27363 8.08396 9.11932 7.81598 9.00012C8.08386 8.88092 8.32046 8.7266 8.52331 8.52372C8.7262 8.3208 8.88052 8.08413 8.99972 7.81615Z"
                             stroke="#0BDA96"
@@ -235,13 +241,7 @@ export default function Home() {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <circle cx="9" cy="9" r="8" fill="#242424" />
-                          <circle
-                            cx="9"
-                            cy="9"
-                            r="8.5"
-                            stroke="white"
-                            stroke-opacity="0.2"
-                          />
+                          <circle cx="9" cy="9" r="8.5" stroke="white" stroke-opacity="0.2" />
                           <g clip-path="url(#clip0_23042_3404)">
                             <path
                               d="M10.6112 6.84959C10.2363 6.23507 9.92585 5.58348 9.68479 4.90519C9.66858 4.85675 9.64027 4.81325 9.60255 4.77881C9.56482 4.74437 9.51893 4.72013 9.46922 4.70839C9.4195 4.69665 9.36761 4.6978 9.31847 4.71173C9.26932 4.72567 9.22455 4.75191 9.18839 4.78799C8.57441 5.51599 8.25734 6.44863 8.30039 7.39999C8.31142 7.74597 8.21682 8.08711 8.02919 8.37799C7.97475 8.1195 7.86707 7.87518 7.71301 7.66059C7.55896 7.44599 7.3619 7.26584 7.13439 7.13159C7.08864 7.10888 7.03785 7.0982 6.98682 7.10058C6.9358 7.10295 6.88622 7.11829 6.84278 7.14516C6.79934 7.17203 6.76346 7.20953 6.73855 7.25412C6.71363 7.29871 6.7005 7.34892 6.70039 7.39999C6.67921 7.90898 6.55383 8.40821 6.33199 8.86679C5.99 9.53088 5.89297 10.2942 6.05793 11.0228C6.22289 11.7513 6.63929 12.3984 7.23399 12.8504C7.72187 13.1701 8.29393 13.3372 8.87719 13.3304C9.74457 13.3335 10.5802 13.0043 11.2124 12.4104C12.1156 11.5076 12.1376 9.80159 11.2688 8.06439C11.0364 7.59999 10.82 7.21879 10.6112 6.84959Z"
@@ -271,8 +271,8 @@ export default function Home() {
                           </defs>
                         </svg>
                       </div>
-                      <div className="w-[128px] px-2 text-[10px] text-[#CCFF00] bg-[#353B1A] flex justify-between items-center gap-1 border-[2px] border-[#CCFF00]/30 rounded-[8px] m-[1px]">
-                        {agent.code}
+                      <div className="w-[128px] mt-1 px-2 text-[10px] text-[#CCFF00] bg-[#353B1A] flex justify-between items-center gap-1 border-[2px] border-[#CCFF00]/30 rounded-[8px]">
+                        {formatWalletAddress(agent?.address)}
                         <svg
                           className="cursor-pointer"
                           width="12"
@@ -293,21 +293,15 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">{agent.price}</div>
-                  <div
-                    className={`text-right ${
-                      agent.change.startsWith("+")
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }`}
-                  >
-                    {agent.change}
+                  <div className="text-right">{agent?.marketCap}</div>
+                  <div className={`text-right text-[${agent?.change24?.color}]`}>
+                    {agent?.change24?.text}
                   </div>
-                  <div className="text-right">{agent.volume}</div>
-                  <div className="text-right">{agent.holders}</div>
-                  <div className="text-right">{agent.ico}</div>
-                  <div className="text-right">{agent.category}</div>
-                </div>
+                  <div className="text-right">{agent?.tvl}</div>
+                  <div className="text-right">{agent?.holders}</div>
+                  <div className="text-right">{agent?.volume24}</div>
+                  <div className="text-right">{agent?.category}</div>
+                </a>
               ))}
             </div>
           </div>

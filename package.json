@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "@suiet/wallet-kit": "^0.3.3",
     "animate.css": "^4.1.1",
+    "apexcharts": "^4.3.0",
     "axios": "^1.7.7",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
