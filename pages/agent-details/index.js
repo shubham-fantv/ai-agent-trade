@@ -1,75 +1,19 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Instagram, Twitter, Send, MessageCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  Instagram,
+  Twitter,
+  Send,
+  MessageCircle,
+} from "lucide-react";
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
+import BondingCurve from "./BondingCurve";
+import TradeComponent from "./TradeComponent";
+import Graph from "./Graph";
 
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export default function AgentDetails() {
-  const [isBuyMode, setIsBuyMode] = useState(true);
-  const [amount, setAmount] = useState(1.05);
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    // Fetch BTC candlestick data from an API
-    const fetchData = async () => {
-      const response = await fetch(
-        "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30"
-      );
-      const json = await response.json();
-
-      // Process prices to create candlestick data
-      const prices = json.prices; // [timestamp, price]
-      const candlestickData = [];
-
-      // Group prices by day and calculate OHLC
-      const groupedPrices = prices.reduce((acc, [timestamp, price]) => {
-        const date = new Date(timestamp).toISOString().split("T")[0]; // Get only the date part
-        if (!acc[date]) acc[date] = [];
-        acc[date].push(price);
-        return acc;
-      }, {});
-
-      // Transform grouped data into OHLC format
-      for (const [date, prices] of Object.entries(groupedPrices)) {
-        const open = prices[0];
-        const high = Math.max(...prices);
-        const low = Math.min(...prices);
-        const close = prices[prices.length - 1];
-        candlestickData.push({
-          x: new Date(date),
-          y: [open, high, low, close],
-        });
-      }
-
-      setData(candlestickData);
-    };
-
-    fetchData();
-  }, []);
-
-  const options = {
-    chart: {
-      type: "candlestick",
-      height: 250,
-    },
-    title: {
-      text: "BTC/USD Candlestick Chart",
-      align: "center",
-      color: "#FFF",
-    },
-    xaxis: {
-      type: "datetime",
-    },
-    yaxis: {
-      tooltip: {
-        enabled: true,
-      },
-    },
-  };
-
   return (
     <div className="min-h-screen bg-[#1A1A1A] text-white pt-24">
       <Head>
@@ -83,7 +27,10 @@ export default function AgentDetails() {
           <Link href="/" className="hover:opacity-80">
             <ArrowLeft className="w-6 h-6" />
           </Link>
-          <h1 className="text-xl font-bold" style={{ fontFamily: "BricolageGrotesque" }}>
+          <h1
+            className="text-xl font-bold"
+            style={{ fontFamily: "BricolageGrotesque" }}
+          >
             AGENT DETAILS
           </h1>
         </div>
@@ -169,14 +116,7 @@ export default function AgentDetails() {
         <div className="grid grid-cols-3 gap-6">
           {/* Graph Section */}
           <div className="col-span-2">
-            <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[300px] mb-6">
-              <h3 className="text-xl font-bold mb-4">Graph</h3>
-              <div className="text-gray-500 h-full flex items-center justify-center">
-                <div className="w-full h-80">
-                  <Chart options={options} series={[{ data }]} type="candlestick" height="250" />
-                </div>
-              </div>
-            </div>
+            <Graph />
 
             {/* What does it do Section */}
             <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
@@ -204,7 +144,8 @@ export default function AgentDetails() {
               <div className="mt-6">
                 <h4 className="font-bold mb-2">Summary</h4>
                 <p className="text-gray-400 text-sm mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod.
                 </p>
 
                 <h4 className="font-bold mb-2">Highlights</h4>
@@ -222,89 +163,10 @@ export default function AgentDetails() {
 
           {/* Buy/Sell Section */}
           <div className="space-y-6">
-            <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
-              <div className="flex rounded-full bg-[#333333] p-1.5 mb-6">
-                <button
-                  className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all
-        ${isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"}`}
-                  onClick={() => setIsBuyMode(true)}
-                >
-                  Buy
-                </button>
-                <button
-                  className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all
-        ${!isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"}`}
-                  onClick={() => setIsBuyMode(false)}
-                >
-                  Sell
-                </button>
-              </div>
-
-              <div className="mb-6">
-                <div className="flex justify-between text-sm mb-3">
-                  <div className="flex items-center gap-1">
-                    <span>Amount</span>
-                    <span className="text-gray-400">Slippage: 12%</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="px-2 py-1 rounded bg-[#2A2A2A] text-xs">0</button>
-                    <button className="px-2 py-1 rounded bg-[#2A2A2A] text-xs">Max</button>
-                    <button className="px-2 py-1 rounded bg-[#2A2A2A] text-xs">50%</button>
-                  </div>
-                </div>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(Number(e.target.value))}
-                    className="w-full bg-[#2A2A2A] rounded-xl p-4 mb-2"
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                    <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
-                    <span className="text-sm">SUI</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <div className="text-sm mb-3">You Receive</div>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value="1,350,889"
-                    readOnly
-                    className="w-full bg-[#2A2A2A] rounded-xl p-4"
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                    <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
-                    <span className="text-sm">MONA</span>
-                  </div>
-                </div>
-              </div>
-
-              <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black hover:bg-[#8B9B3E] transition-colors font-medium flex items-center justify-center gap-2">
-                Place Trade
-              </button>
-            </div>
+            <TradeComponent />
 
             {/* Bonding Curve */}
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-4">Bonding Curve</h3>
-              <div className="h-1 bg-[#333333] rounded-full overflow-hidden mb-4">
-                <div className="h-full w-[100%] bg-gradient-to-r from-[#CCFF00] to-[#CCFF00]/0"></div>
-              </div>
-              <div className="text-sm text-gray-400">
-                <p className="mb-2">
-                  When the market cap reaches $7,500 $AI all the liquidity from the bonding curve
-                  will be deposited into Cellar and burned, progression increases as the price goes
-                  up.
-                </p>
-                <p>
-                  there is a 0 tokens still available for sale in the bonding curve and there is
-                  5,000 $AI in the bonding curve
-                </p>
-              </div>
-            </div>
+            <BondingCurve />
           </div>
         </div>
       </div>

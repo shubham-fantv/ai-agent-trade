@@ -3,13 +3,14 @@ import Typography from "@mui/material/Typography";
 import { useWallet } from "@suiet/wallet-kit";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useIsMobile from "../../hooks/useIsMobile";
 import { setSignWalletPopupOpen } from "../../redux/slices/layout";
 import { formatWalletAddress } from "../../utils/common";
 import WalletConnectModal from "./WalletConnectModal";
 import styles from "./style";
+import useWalletConnection from "../hooks/useWalletConnection";
 
 const LogOutNavItem = [
   {
@@ -28,6 +29,7 @@ const LogOutNavItem = [
 
 const RevampHeader = ({ app }) => {
   const wallet = useWallet();
+  const { walletState } = useWalletConnection();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [walletAnchorEl, setWalletAnchorEl] = useState(null);
 
@@ -67,6 +69,14 @@ const RevampHeader = ({ app }) => {
     }
     setIsMenuOpen(open);
   };
+
+  const isWalletConnected = useMemo(() => {
+    if (walletState.status == "connected") {
+      return true;
+    } else {
+      return false;
+    }
+  }, [walletState, walletState?.state]);
 
   const drawerContent = (
     <Box
@@ -248,10 +258,10 @@ const RevampHeader = ({ app }) => {
             <Box>
               <Box sx={styles.btnContainer} onClick={handleWalletClick}>
                 <img src="/images/rocket-launch.svg" />
-                {wallet.connected ? (
+                {isWalletConnected ? (
                   <Button
                     sx={{
-                      color: "#FFFFFF", // Light text for button
+                      color: "#000000",
                       fontFamily: "Nohemi",
                       fontSize: "16px",
                       "&:hover": {
@@ -259,12 +269,12 @@ const RevampHeader = ({ app }) => {
                       },
                     }}
                   >
-                    {formatWalletAddress(wallet?.address)}
+                    {formatWalletAddress(walletState?.address)}
                   </Button>
                 ) : (
                   <Button
                     sx={{
-                      color: "#FFFFFF", // Light text for button
+                      color: "#000000",
                       fontFamily: "Nohemi",
                       fontSize: "16px",
                     }}

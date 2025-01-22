@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "../src/Layout";
 import PageThemeProvider from "../src/styles/PageThemeProvider";
 import { SnackbarProvider } from "@/src/context/SnackbarContext";
@@ -9,13 +9,19 @@ import { Provider } from "react-redux";
 import store from "../src/redux/store";
 import "@/styles/globals.css";
 import "animate.css";
-import { WalletProvider, SuiWallet } from "@suiet/wallet-kit";
+import {
+  createNetworkConfig,
+  SuiClientProvider,
+  WalletProvider,
+} from "@mysten/dapp-kit";
+import { getFullnodeUrl } from "@mysten/sui/client";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { refetchOnWindowFocus: false, refetchOnMount: false },
-  },
+const { networkConfig } = createNetworkConfig({
+  localnet: { url: getFullnodeUrl("localnet") },
+  mainnet: { url: getFullnodeUrl("mainnet") },
 });
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }) {
   // console.log = () => {};
@@ -24,19 +30,21 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider defaultWallets={[SuiWallet]}>
-        <Provider store={store}>
-          <PageThemeProvider {...pageProps}>
-            <AppSeo />
-            <SnackbarProvider>
-              <SnackBar />
-              <Layout {...pageProps}>
-                <Component {...pageProps} />
-              </Layout>
-            </SnackbarProvider>
-          </PageThemeProvider>
-        </Provider>
-      </WalletProvider>
+      <SuiClientProvider networks={networkConfig} defaultNetwork="localnet">
+        <WalletProvider autoConnect>
+          <Provider store={store}>
+            <PageThemeProvider {...pageProps}>
+              <AppSeo />
+              <SnackbarProvider>
+                <SnackBar />
+                <Layout {...pageProps}>
+                  <Component {...pageProps} />
+                </Layout>
+              </SnackbarProvider>
+            </PageThemeProvider>
+          </Provider>
+        </WalletProvider>
+      </SuiClientProvider>
     </QueryClientProvider>
   );
 }
