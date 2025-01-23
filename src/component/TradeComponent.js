@@ -1,11 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSnackbar } from "@/src/context/SnackbarContext";
-import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import fetcher from "@/src/dataProvider";
 import { FANTV_API_URL } from "@/src/constant/constants";
 import BondingCurve from "./BondingCurve";
+import {
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+} from "@mysten/dapp-kit";
 
 const TradeComponent = () => {
   const { openSnackbar } = useSnackbar();
@@ -16,9 +19,10 @@ const TradeComponent = () => {
   const [loading, setLoading] = useState(false);
   const [tradeLoading, setTradeLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [disgest, setDigest] = useState("");
   const currentAccount = useCurrentAccount();
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+  console.log("🚀 ~ TradeComponent ~ currentAccount:", currentAccount);
 
   // Fetch balance when account changes
   useEffect(() => {
@@ -106,6 +110,55 @@ const TradeComponent = () => {
     fetchReceivedAmount(value);
   };
 
+  const handleTransaction = async (transactionScript) => {
+    try {
+      const tx = new Transaction();
+      const [coin] = tx.splitCoins(
+        "0xfda1f6980eca98be2f6c3a4cbfc29a05b4e0c2b8f9d6a3647f0a8351cb2943ca",
+        [tx.pure.u64(BigInt(parseFloat(100) * 1_000_000))]
+      );
+      tx.moveCall({
+        package:
+          "0x35eb56841a54559d564d734c6b2d889df5099692752be2456976c7113cffa3de",
+        module: "manai_fun",
+        typeArguments: [
+          "0x57690320f6599e155ae53bb81e465f3034eae94892d1ecaf75e65a05cd672d33::btr::BTR",
+        ],
+        function: "buy",
+        arguments: [
+          tx.object(
+            "0xd6f482c9fe1aa67ddbed0489dddeba4d46f90d698a03aac3e3b4d9bd615b3d67"
+          ),
+          tx.object(
+            "0x19e6be0b881a84fb788e8edd256f8a33a1b5313391a01c000417282956feb50c"
+          ),
+          tx.pure.u64(BigInt(parseFloat(100) * 1_000_000)),
+          tx.object(coin),
+        ],
+      });
+      signAndExecuteTransaction(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: (result) => {
+            console.log("Transaction executed:", result);
+            openSnackbar("success", "Transaction successful");
+            setDigest(result.digest);
+            setError("");
+          },
+          onError: (err) => {
+            console.error("Transaction failed:", err);
+            setError(err.message);
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Failed to create transaction:", err);
+      setError(err.message);
+    }
+  };
+
   const placeTrade = async () => {
     if (!amount || parseFloat(amount) <= 0) {
       openSnackbar("error", "Please enter a valid amount");
@@ -120,25 +173,6 @@ const TradeComponent = () => {
     try {
       setTradeLoading(true);
       setError("");
-
-      await signAndExecuteTransaction(
-        {
-          transaction: new Transaction(),
-          chain: "sui:testnet",
-        },
-        {
-          onSuccess: (result) => {
-            console.log("executed transaction", result);
-            setDigest(result.digest);
-          },
-        },
-        {
-          onError: (error) => {
-            console.error("Transaction failed:", error);
-            openSnackbar("error", error.message || "Transaction failed. Please try again.");
-          },
-        }
-      );
       const response = await fetcher.post(
         `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}`,
         {
@@ -146,12 +180,18 @@ const TradeComponent = () => {
           amount,
         }
       );
-      if (response.message === "success") {
-        openSnackbar("success", "Trade placed successfully");
-      }
+
+      console.log(response);
+
+      openSnackbar("warning", "Please approve the transaction.");
+
+      handleTransaction("response.data.transactionScript");
     } catch (error) {
       console.error("Error placing trade:", error);
-      openSnackbar("error", error.message || "Trade failed. Please try again later");
+      openSnackbar(
+        "error",
+        error.message || "Trade failed. Please try again later"
+      );
     } finally {
       setTradeLoading(false);
     }
@@ -164,7 +204,9 @@ const TradeComponent = () => {
           <button
             layout
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
-              isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"
+              isBuyMode
+                ? "bg-white text-black"
+                : "text-gray-400 hover:text-white"
             }`}
             onClick={() => setIsBuyMode(true)}
           >
@@ -173,7 +215,9 @@ const TradeComponent = () => {
           <button
             layout
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
-              !isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"
+              !isBuyMode
+                ? "bg-white text-black"
+                : "text-gray-400 hover:text-white"
             }`}
             onClick={() => setIsBuyMode(false)}
           >
@@ -211,7 +255,11 @@ const TradeComponent = () => {
               placeholder="0.0"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
+              <img
+                src="/images/sui.svg"
+                alt="SUI"
+                className="w-[16px] h-[16px]"
+              />
               <span className="text-sm">{isBuyMode ? "SUI" : "MONA"}</span>
             </div>
           </div>
@@ -229,7 +277,11 @@ const TradeComponent = () => {
               placeholder="0.0"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
+              <img
+                src="/images/sui.svg"
+                alt="SUI"
+                className="w-[16px] h-[16px]"
+              />
               <span className="text-sm">{!isBuyMode ? "SUI" : "MONA"}</span>
             </div>
           </div>
