@@ -1,11 +1,7 @@
-import {
-  useCurrentAccount,
-  useDisconnectWallet,
-  useSignPersonalMessage,
-} from "@mysten/dapp-kit";
+import { useCurrentAccount, useDisconnectWallet, useSignPersonalMessage } from "@mysten/dapp-kit";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import { FANTV_API_URL } from "@/src/constant/constants";
 const useWalletConnection = () => {
   const account = useCurrentAccount();
   const { mutate: signPersonalMessage } = useSignPersonalMessage();
@@ -23,14 +19,11 @@ const useWalletConnection = () => {
 
   const requestNonce = async (address) => {
     try {
-      const response = await fetch(
-        "http://15.207.140.245:3003/v1/auth/request-nonce",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(address),
-        }
-      );
+      const response = await fetch(`${FANTV_API_URL}/v1/auth/request-nonce`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(address),
+      });
       const data = await response.json();
       return data.data.nonce;
     } catch (error) {
@@ -42,17 +35,14 @@ const useWalletConnection = () => {
     try {
       const signatureBase64 = btoa(String.fromCharCode(...signature));
 
-      const response = await fetch(
-        "http://15.207.140.245:3003/v1/auth/verify-signature",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            address,
-            signature: signatureBase64,
-          }),
-        }
-      );
+      const response = await fetch(`${FANTV_API_URL}/v1/auth/verify-signature`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          address,
+          signature: signatureBase64,
+        }),
+      });
       const data = await response.json();
       if (data.code === 200) return data.data;
       throw new Error("Verification failed");
@@ -66,8 +56,7 @@ const useWalletConnection = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    document.cookie =
-      "accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    document.cookie = "accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 
     setWalletState({
       status: "disconnected",
@@ -138,10 +127,7 @@ const useWalletConnection = () => {
         obj.referralCode = rc;
       }
       const nonce = await requestNonce(obj);
-      const verificationData = await verifySignature(
-        account.address,
-        "dummy signature"
-      );
+      const verificationData = await verifySignature(account.address, "dummy signature");
 
       if (verificationData) {
         localStorage.setItem(
@@ -152,14 +138,8 @@ const useWalletConnection = () => {
           })
         );
         localStorage.setItem("user", JSON.stringify(verificationData.user));
-        localStorage.setItem(
-          "accessToken",
-          verificationData.tokens.access.token
-        );
-        localStorage.setItem(
-          "refreshToken",
-          verificationData.tokens.refresh.token
-        );
+        localStorage.setItem("accessToken", verificationData.tokens.access.token);
+        localStorage.setItem("refreshToken", verificationData.tokens.refresh.token);
         document.cookie = `accessToken=${verificationData.tokens.access.token}; path=/;`;
 
         setWalletState({
