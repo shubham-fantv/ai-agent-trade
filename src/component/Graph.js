@@ -63,16 +63,11 @@ const Graph = () => {
     },
   };
   return (
-    <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[300px] mb-6">
+    <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[398px] mb-6 ">
       <h3 className="text-xl font-bold mb-4">Graph</h3>
       <div className="text-gray-500 h-full flex items-center justify-center">
         <div className="w-full h-80">
-          <Chart
-            options={options}
-            series={[{ data }]}
-            type="candlestick"
-            height="250"
-          />
+          <Chart options={options} series={[{ data }]} type="candlestick" height="250" />
         </div>
       </div>
     </div>

@@ -55,6 +55,7 @@ const DisconnectButton = styled(Button)(({ theme }) => ({
 
 const WalletConnectModal = ({ anchorEl, onClose }) => {
   const { walletState, handleDisconnect } = useWalletConnection();
+  console.log("🚀 ~ WalletConnectModal ~ walletState:", walletState);
 
   const open = Boolean(anchorEl);
 
@@ -126,9 +127,7 @@ const WalletConnectModal = ({ anchorEl, onClose }) => {
             >
               <img src="/images/sui.svg" alt="Sui Wallet" />
               <Box sx={{ flexGrow: 1, textAlign: "left" }}>
-                <Typography sx={{ fontWeight: "medium" }}>
-                  Sui Wallet
-                </Typography>
+                <Typography sx={{ fontWeight: "medium" }}>Sui Wallet</Typography>
                 <Typography variant="caption" sx={{ color: "text.secondary" }}>
                   {truncateAddress(walletState.address)}
                 </Typography>
@@ -136,9 +135,7 @@ const WalletConnectModal = ({ anchorEl, onClose }) => {
               <PointsBadge>Connected</PointsBadge>
             </WalletOption>
             <Divider sx={{ my: 2 }} />
-            <DisconnectButton onClick={handleDisconnect}>
-              Disconnect Wallet
-            </DisconnectButton>
+            <DisconnectButton onClick={handleDisconnect}>Disconnect Wallet</DisconnectButton>
           </>
         );
     }
@@ -163,8 +160,7 @@ const WalletConnectModal = ({ anchorEl, onClose }) => {
           mt: 1,
           boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
           borderRadius: "12px",
-          background:
-            "linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0.4) 100%)",
+          background: "linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0.4) 100%)",
           backdropFilter: "blur(8px)",
         },
       }}

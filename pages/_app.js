@@ -9,11 +9,8 @@ import { Provider } from "react-redux";
 import store from "../src/redux/store";
 import "@/styles/globals.css";
 import "animate.css";
-import {
-  createNetworkConfig,
-  SuiClientProvider,
-  WalletProvider,
-} from "@mysten/dapp-kit";
+import "@mysten/dapp-kit/dist/index.css";
+import { createNetworkConfig, SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
 import { getFullnodeUrl } from "@mysten/sui/client";
 
 const { networkConfig } = createNetworkConfig({

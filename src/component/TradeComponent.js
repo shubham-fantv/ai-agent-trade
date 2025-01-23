@@ -5,10 +5,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import fetcher from "@/src/dataProvider";
 import { FANTV_API_URL } from "@/src/constant/constants";
 import BondingCurve from "./BondingCurve";
-import {
-  useCurrentAccount,
-  useSignAndExecuteTransaction,
-} from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 
 const TradeComponent = () => {
   const { openSnackbar } = useSnackbar();
@@ -118,20 +115,15 @@ const TradeComponent = () => {
         [tx.pure.u64(BigInt(parseFloat(100) * 1_000_000))]
       );
       tx.moveCall({
-        package:
-          "0x35eb56841a54559d564d734c6b2d889df5099692752be2456976c7113cffa3de",
+        package: "0x35eb56841a54559d564d734c6b2d889df5099692752be2456976c7113cffa3de",
         module: "manai_fun",
         typeArguments: [
           "0x57690320f6599e155ae53bb81e465f3034eae94892d1ecaf75e65a05cd672d33::btr::BTR",
         ],
         function: "buy",
         arguments: [
-          tx.object(
-            "0xd6f482c9fe1aa67ddbed0489dddeba4d46f90d698a03aac3e3b4d9bd615b3d67"
-          ),
-          tx.object(
-            "0x19e6be0b881a84fb788e8edd256f8a33a1b5313391a01c000417282956feb50c"
-          ),
+          tx.object("0xd6f482c9fe1aa67ddbed0489dddeba4d46f90d698a03aac3e3b4d9bd615b3d67"),
+          tx.object("0x19e6be0b881a84fb788e8edd256f8a33a1b5313391a01c000417282956feb50c"),
           tx.pure.u64(BigInt(parseFloat(100) * 1_000_000)),
           tx.object(coin),
         ],
@@ -188,25 +180,20 @@ const TradeComponent = () => {
       handleTransaction("response.data.transactionScript");
     } catch (error) {
       console.error("Error placing trade:", error);
-      openSnackbar(
-        "error",
-        error.message || "Trade failed. Please try again later"
-      );
+      openSnackbar("error", error.message || "Trade failed. Please try again later");
     } finally {
       setTradeLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
-        <div layout className="flex rounded-full bg-[#333333] p-1.5 mb-6">
+    <div className="space-y-6 w-full">
+      <div className="bg-[#222222] w-full   border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
+        <div layout className="flex rounded-full bg-[#333333] p-2 mb-6">
           <button
             layout
-            className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
-              isBuyMode
-                ? "bg-white text-black"
-                : "text-gray-400 hover:text-white"
+            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
+              isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"
             }`}
             onClick={() => setIsBuyMode(true)}
           >
@@ -214,10 +201,8 @@ const TradeComponent = () => {
           </button>
           <button
             layout
-            className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
-              !isBuyMode
-                ? "bg-white text-black"
-                : "text-gray-400 hover:text-white"
+            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
+              !isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"
             }`}
             onClick={() => setIsBuyMode(false)}
           >
@@ -230,7 +215,7 @@ const TradeComponent = () => {
           <div className="flex justify-between text-sm mb-3">
             <div className="flex items-center gap-1">
               <span>Amount</span>
-              <span className="text-gray-400">Slippage: 12%</span>
+              <span className="text-gray-400 font-normal">Slippage: 12%</span>
             </div>
             <div className="flex items-center gap-2">
               {["0", "50", "100"].map((percent) => (
@@ -255,11 +240,7 @@ const TradeComponent = () => {
               placeholder="0.0"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img
-                src="/images/sui.svg"
-                alt="SUI"
-                className="w-[16px] h-[16px]"
-              />
+              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
               <span className="text-sm">{isBuyMode ? "SUI" : "MONA"}</span>
             </div>
           </div>
@@ -277,11 +258,7 @@ const TradeComponent = () => {
               placeholder="0.0"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img
-                src="/images/sui.svg"
-                alt="SUI"
-                className="w-[16px] h-[16px]"
-              />
+              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
               <span className="text-sm">{!isBuyMode ? "SUI" : "MONA"}</span>
             </div>
           </div>
