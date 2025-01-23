@@ -1,13 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSnackbar } from "@/src/context/SnackbarContext";
-import {
-  useCurrentAccount,
-  useSignAndExecuteTransaction,
-} from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import fetcher from "@/src/dataProvider";
 import { FANTV_API_URL } from "@/src/constant/constants";
+import BondingCurve from "./BondingCurve";
 
 const TradeComponent = () => {
   const { openSnackbar } = useSnackbar();
@@ -137,10 +135,7 @@ const TradeComponent = () => {
         {
           onError: (error) => {
             console.error("Transaction failed:", error);
-            openSnackbar(
-              "error",
-              error.message || "Transaction failed. Please try again."
-            );
+            openSnackbar("error", error.message || "Transaction failed. Please try again.");
           },
         }
       );
@@ -156,10 +151,7 @@ const TradeComponent = () => {
       }
     } catch (error) {
       console.error("Error placing trade:", error);
-      openSnackbar(
-        "error",
-        error.message || "Trade failed. Please try again later"
-      );
+      openSnackbar("error", error.message || "Trade failed. Please try again later");
     } finally {
       setTradeLoading(false);
     }
@@ -172,9 +164,7 @@ const TradeComponent = () => {
           <button
             layout
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
-              isBuyMode
-                ? "bg-white text-black"
-                : "text-gray-400 hover:text-white"
+              isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"
             }`}
             onClick={() => setIsBuyMode(true)}
           >
@@ -183,9 +173,7 @@ const TradeComponent = () => {
           <button
             layout
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
-              !isBuyMode
-                ? "bg-white text-black"
-                : "text-gray-400 hover:text-white"
+              !isBuyMode ? "bg-white text-black" : "text-gray-400 hover:text-white"
             }`}
             onClick={() => setIsBuyMode(false)}
           >
@@ -223,11 +211,7 @@ const TradeComponent = () => {
               placeholder="0.0"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img
-                src="/images/sui.svg"
-                alt="SUI"
-                className="w-[16px] h-[16px]"
-              />
+              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
               <span className="text-sm">{isBuyMode ? "SUI" : "MONA"}</span>
             </div>
           </div>
@@ -245,11 +229,7 @@ const TradeComponent = () => {
               placeholder="0.0"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img
-                src="/images/sui.svg"
-                alt="SUI"
-                className="w-[16px] h-[16px]"
-              />
+              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
               <span className="text-sm">{!isBuyMode ? "SUI" : "MONA"}</span>
             </div>
           </div>
@@ -270,6 +250,7 @@ const TradeComponent = () => {
           )}
         </button>
       </div>
+      <BondingCurve />
     </div>
   );
 };

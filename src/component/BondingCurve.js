@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const BondingCurve = () => {
   return (
@@ -9,17 +9,16 @@ const BondingCurve = () => {
       </div>
       <div className="text-sm text-gray-400">
         <p className="mb-2">
-          When the market cap reaches $7,500 $AI all the liquidity from the
-          bonding curve will be deposited into Cellar and burned, progression
-          increases as the price goes up.
+          When the market cap reaches $7,500 $AI all the liquidity from the bonding curve will be
+          deposited into Cellar and burned, progression increases as the price goes up.
         </p>
         <p>
-          there is a 0 tokens still available for sale in the bonding curve and
-          there is 5,000 $AI in the bonding curve
+          there is a 0 tokens still available for sale in the bonding curve and there is 5,000 $AI
+          in the bonding curve
         </p>
       </div>
     </div>
   );
-}
+};
 
-export default BondingCurve
+export default BondingCurve;

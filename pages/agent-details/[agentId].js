@@ -6,6 +6,7 @@ import Link from "next/link";
 import Graph from "../../src/component/Graph";
 import TradeComponent from "../../src/component/TradeComponent";
 import { formatWalletAddress } from "../../src/utils/common";
+import BondingCurve from "../../src/component/BondingCurve";
 
 export default function AgentDetails({ agentDetail, agentId }) {
   console.log("🚀 ~ AgentDetails ~ agentDetail:", agentDetail);

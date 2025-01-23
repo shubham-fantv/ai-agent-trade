@@ -40,7 +40,8 @@ export const formatDateRange = (startDate, endDate) => {
 
 export function formatWalletAddress(input) {
   if (typeof input !== "string" || !input.startsWith("0x") || input.length <= 10) {
-    throw new Error("Invalid input. Ensure it is a valid hex string starting with '0x'.");
+    console.warn("Invalid wallet address:", input);
+    return input; // Return the input as-is or an empty string to handle gracefully
   }
 
   // Extract and return the formatted string

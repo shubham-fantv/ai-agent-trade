@@ -11,6 +11,8 @@ export default function AgentDetails() {
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState(1.05);
 
+  return <h1 className="text-black">do not use this file, use dynamic route agentId</h1>;
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
