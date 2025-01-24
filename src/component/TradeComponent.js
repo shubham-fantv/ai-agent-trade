@@ -12,9 +12,7 @@ const TradeComponent = ({ agentDetail }) => {
   const [orderId, setOrderId] = useState("");
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState("");
-  console.log("🚀 ~ TradeComponent ~ amount:", amount);
   const [receivedAmount, setReceivedAmount] = useState("");
-  console.log("🚀 ~ TradeComponent ~ receivedAmount:", receivedAmount);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tradeLoading, setTradeLoading] = useState(false);
@@ -178,20 +176,20 @@ const TradeComponent = ({ agentDetail }) => {
   };
 
   const placeTrade = async () => {
-    // if (!balance) {
-    //   openSnackbar("error", "Error: Insufficient Token");
-    //   return;
-    // }
+    if (!balance) {
+      openSnackbar("error", "Error: Insufficient Token");
+      return;
+    }
 
-    // if (!amount || parseFloat(amount) <= 0) {
-    //   openSnackbar("error", "Please enter a valid amount");
-    //   return;
-    // }
+    if (!amount || parseFloat(amount) <= 0) {
+      openSnackbar("error", "Please enter a valid amount");
+      return;
+    }
 
-    // if (!currentAccount) {
-    //   openSnackbar("error", "Please connect your wallet to place trade");
-    //   return;
-    // }
+    if (!currentAccount) {
+      openSnackbar("error", "Please connect your wallet to place trade");
+      return;
+    }
 
     try {
       setTradeLoading(true);
@@ -244,10 +242,10 @@ const TradeComponent = ({ agentDetail }) => {
           <div className="flex justify-between mb-3 text-sm">
             <div className="flex items-center gap-1">
               <span>Amount</span>
-              <span className="font-normal text-gray-400">Slippage:</span>
+              {/* <span className="font-normal text-gray-400">Slippage:</span>
               <span style={{ color: agentDetail?.change24?.color }}>
                 {agentDetail?.change24?.text}
-              </span>
+              </span> */}
             </div>
             <div className="flex items-center gap-2">
               {["0", "50", "100"].map((percent) => (
