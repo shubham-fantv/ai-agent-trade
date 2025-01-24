@@ -107,24 +107,21 @@ const TradeComponent = () => {
     fetchReceivedAmount(value);
   };
 
-  const handleTransaction = async (transactionScript) => {
+  const handleTransaction = async (data) => {
     try {
       const tx = new Transaction();
-      const [coin] = tx.splitCoins(
-        "0xfda1f6980eca98be2f6c3a4cbfc29a05b4e0c2b8f9d6a3647f0a8351cb2943ca",
-        [tx.pure.u64(BigInt(parseFloat(100) * 1_000_000))]
-      );
+      const [coin] = tx.splitCoins(data?.splitObject, [
+        tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
+      ]);
       tx.moveCall({
-        package: "0x35eb56841a54559d564d734c6b2d889df5099692752be2456976c7113cffa3de",
-        module: "manai_fun",
-        typeArguments: [
-          "0x57690320f6599e155ae53bb81e465f3034eae94892d1ecaf75e65a05cd672d33::btr::BTR",
-        ],
-        function: "buy",
+        package: data?.package,
+        module: data?.module,
+        typeArguments: data?.typeArguments,
+        function: data?.function,
         arguments: [
-          tx.object("0xd6f482c9fe1aa67ddbed0489dddeba4d46f90d698a03aac3e3b4d9bd615b3d67"),
-          tx.object("0x19e6be0b881a84fb788e8edd256f8a33a1b5313391a01c000417282956feb50c"),
-          tx.pure.u64(BigInt(parseFloat(100) * 1_000_000)),
+          tx.object(data?.arguments?.[0]),
+          tx.object(data?.arguments?.[1]),
+          tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
           tx.object(coin),
         ],
       });
@@ -173,11 +170,9 @@ const TradeComponent = () => {
         }
       );
 
-      console.log(response);
-
       openSnackbar("warning", "Please approve the transaction.");
 
-      handleTransaction("response.data.transactionScript");
+      handleTransaction(response.data);
     } catch (error) {
       console.error("Error placing trade:", error);
       openSnackbar("error", error.message || "Trade failed. Please try again later");
