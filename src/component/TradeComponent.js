@@ -43,10 +43,7 @@ const TradeComponent = ({ agentDetail }) => {
           jsonrpc: "2.0",
           id: 3,
           method: "suix_getBalance",
-          params: [
-            address,
-            "0xbc732bc5f1e9a9f4bdf4c0672ee538dbf56c161afe04ff1de2176efabdf41f92::suai::SUAI",
-          ],
+          params: [address, agentDetail?.parentId],
         }),
       });
       const data = await response.json();
@@ -89,7 +86,7 @@ const TradeComponent = ({ agentDetail }) => {
             "client-target-api-version": "1.32.0",
             Authorization: "Bearer " + getToken(),
           },
-          body: JSON.stringify(digest),
+          body: JSON.stringify({ digest: digest }),
         }
       );
       const data = await response.json();
@@ -123,9 +120,9 @@ const TradeComponent = ({ agentDetail }) => {
       setLoading(true);
       setError("");
       const response = await fetcher.get(
-        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?ticker=${
+        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?${
           agentDetail.ticker
-        }&amount=${value}`
+        }=%24MSC1&amount=$${isBuyMode ? value : receivedAmount}`
       );
       setReceivedAmount(response.data.value);
       globalOrderId = response.data.orderId;
@@ -181,9 +178,7 @@ const TradeComponent = ({ agentDetail }) => {
             console.log("Transaction executed:", result);
             openSnackbar("success", "Transaction successful");
             setDigest(result.digest);
-            postDigest({
-              digest: result.digest,
-            });
+            postDigest(result.digest);
             setError("");
           },
           onError: (err) => {
@@ -199,20 +194,20 @@ const TradeComponent = ({ agentDetail }) => {
   };
 
   const placeTrade = async () => {
-    // if (!balance) {
-    //   openSnackbar("error", "Error: Insufficient Token");
-    //   return;
-    // }
+    if (!balance) {
+      openSnackbar("error", "Error: Insufficient Token");
+      return;
+    }
 
-    // if (!amount || parseFloat(amount) <= 0) {
-    //   openSnackbar("error", "Please enter a valid amount");
-    //   return;
-    // }
+    if (!amount || parseFloat(amount) <= 0) {
+      openSnackbar("error", "Please enter a valid amount");
+      return;
+    }
 
-    // if (!currentAccount) {
-    //   openSnackbar("error", "Please connect your wallet to place trade");
-    //   return;
-    // }
+    if (!currentAccount) {
+      openSnackbar("error", "Please connect your wallet to place trade");
+      return;
+    }
 
     try {
       setTradeLoading(true);
@@ -220,8 +215,8 @@ const TradeComponent = ({ agentDetail }) => {
       const response = await fetcher.post(
         `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}`,
         {
-          ticker: agentDetail.ticker,
-          amount: isBuyMode ? amount : receivedAmount,
+          ticker: "$MSC1",
+          amount,
         }
       );
 
