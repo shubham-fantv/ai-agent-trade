@@ -136,9 +136,9 @@ const TradeComponent = () => {
   const handleTransaction = async (data) => {
     try {
       const tx = new Transaction();
-      // const [coin] = tx.splitCoins(data?.splitObject, [
-      //   tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
-      // ]);
+      const [coin] = tx.splitCoins(data?.splitObject, [
+        tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
+      ]);
       tx.moveCall({
         package: data?.package,
         package: data?.package,
@@ -149,7 +149,7 @@ const TradeComponent = () => {
           tx.object(data?.arguments?.[0]),
           tx.object(data?.arguments?.[1]),
           tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]))),
-          tx.object(data?.splitObject),
+          tx.object(coin),
         ],
         gasBudget: 1000000000,
       });
