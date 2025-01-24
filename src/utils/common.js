@@ -1,6 +1,6 @@
 export const openLink = (url) => {
-  const newWin = window.open(url, "_blank");
-  if (!newWin || newWin.closed || typeof newWin.closed === "undefined") {
+  const newWin = window.open(url, '_blank');
+  if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
     return false;
   }
   return true;
@@ -9,16 +9,16 @@ export const openLink = (url) => {
 export const formatDateRange = (startDate, endDate) => {
   // Function to add ordinal suffix to a day
   const ordinalSuffix = (day) => {
-    if (day >= 11 && day <= 13) return "th";
+    if (day >= 11 && day <= 13) return 'th';
     switch (day % 10) {
       case 1:
-        return "st";
+        return 'st';
       case 2:
-        return "nd";
+        return 'nd';
       case 3:
-        return "rd";
+        return 'rd';
       default:
-        return "th";
+        return 'th';
     }
   };
 
@@ -29,8 +29,8 @@ export const formatDateRange = (startDate, endDate) => {
   // Extract and format dates
   const startDay = start.getDate();
   const endDay = end.getDate();
-  const startMonth = start.toLocaleString("default", { month: "short" });
-  const endMonth = end.toLocaleString("default", { month: "short" });
+  const startMonth = start.toLocaleString('default', { month: 'short' });
+  const endMonth = end.toLocaleString('default', { month: 'short' });
 
   // Construct the formatted date range
   const formattedStart = `${startDay}${ordinalSuffix(startDay)} ${startMonth}`;
@@ -39,13 +39,17 @@ export const formatDateRange = (startDate, endDate) => {
 };
 
 export function formatWalletAddress(input) {
-  if (typeof input !== "string" || !input.startsWith("0x") || input.length <= 10) {
-    console.warn("Invalid wallet address:", input);
+  if (
+    typeof input !== 'string' ||
+    !input.startsWith('0x') ||
+    input.length <= 10
+  ) {
+    console.warn('Invalid wallet address:', input);
     return input; // Return the input as-is or an empty string to handle gracefully
   }
 
   // Extract and return the formatted string
-  return `${input.slice(0, 5)}...${input.slice(-4)}`;
+  return `${input.slice(0, 12)}...${input.slice(-4)}`;
 }
 
 export function formatAddressInLeaderboard(address) {

@@ -7,7 +7,7 @@ import { FANTV_API_URL } from "@/src/constant/constants";
 import BondingCurve from "./BondingCurve";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 
-const TradeComponent = ({ticker}) => {
+const TradeComponent = ({ agentDetail }) => {
   const { openSnackbar } = useSnackbar();
   const [orderId, setOrderId] = useState("");
   const [isBuyMode, setIsBuyMode] = useState(true);
@@ -20,7 +20,6 @@ const TradeComponent = ({ticker}) => {
   const [disgest, setDigest] = useState("");
   const currentAccount = useCurrentAccount();
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-  console.log("🚀 ~ TradeComponent ~ currentAccount:", currentAccount);
 
   // Fetch balance when account changes
   useEffect(() => {
@@ -52,13 +51,13 @@ const TradeComponent = ({ticker}) => {
       const data = await response.json();
       if (data.result && data.result.totalBalance) {
         setBalance(Number(data.result.totalBalance) / 1e9);
-        console.log(balance);
       }
     } catch (error) {
       console.error("Error fetching balance:", error);
       openSnackbar("error", "Failed to fetch balance");
     }
   };
+
   const postDigest = async (digest) => {
     try {
       const response = await fetch(`${FANTV_API_URL}/v1/trade/order/${orderId}`, {
@@ -76,7 +75,6 @@ const TradeComponent = ({ticker}) => {
       const data = await response.json();
       if (data.result && data.result.totalBalance) {
         setBalance(Number(data.result.totalBalance) / 1e9);
-        console.log(balance);
       }
     } catch (error) {
       console.error("Error fetching balance:", error);
@@ -104,13 +102,10 @@ const TradeComponent = ({ticker}) => {
     try {
       setLoading(true);
       setError("");
-      console.log(value, receivedAmount, isBuyMode)
       const response = await fetcher.get(
-        `${FANTV_API_URL}/v1/trade/${
-          isBuyMode ? "buy" : "sell"
-        }-receive?ticker=${ticker}&amount=${
-          isBuyMode ? value : receivedAmount
-        }`
+        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?${
+          agentDetail.ticker
+        }=%24MSC1&amount=$${isBuyMode ? value : receivedAmount}`
       );
       setReceivedAmount(response.data.value);
       setOrderId(response.data.orderId);
@@ -181,6 +176,11 @@ const TradeComponent = ({ticker}) => {
   };
 
   const placeTrade = async () => {
+    if (!balance) {
+      openSnackbar("error", "Error: Insufficient Token");
+      return;
+    }
+
     if (!amount || parseFloat(amount) <= 0) {
       openSnackbar("error", "Please enter a valid amount");
       return;
@@ -207,14 +207,14 @@ const TradeComponent = ({ticker}) => {
       handleTransaction(response.data);
     } catch (error) {
       console.error("Error placing trade:", error);
-      openSnackbar("error", error.message || "Trade failed. Please try again later");
+      openSnackbar("error", "Trade failed. Please try again later");
     } finally {
       setTradeLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="w-full space-y-6">
       <div className="bg-[#222222] w-full   border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
         <div layout className="flex rounded-full bg-[#333333] p-2 mb-6">
           <button
@@ -239,10 +239,13 @@ const TradeComponent = ({ticker}) => {
 
         {/* Amount Section */}
         <div className="mb-6">
-          <div className="flex justify-between text-sm mb-3">
+          <div className="flex justify-between mb-3 text-sm">
             <div className="flex items-center gap-1">
               <span>Amount</span>
-              <span className="text-gray-400 font-normal">Slippage: 12%</span>
+              <span className="font-normal text-gray-400">Slippage:</span>
+              <span style={{ color: agentDetail?.change24?.color }}>
+                {agentDetail?.change24?.text}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               {["0", "50", "100"].map((percent) => (
@@ -266,16 +269,23 @@ const TradeComponent = ({ticker}) => {
               }`}
               placeholder="0.0"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
-              <span className="text-sm">{isBuyMode ? "SUI" : "MONA"}</span>
+            <div className="absolute flex items-center gap-2 -translate-y-1/2 right-4 top-1/2">
+              <img
+                profilePic
+                src={isBuyMode ? `${agentDetail?.parentUrl}` : `${agentDetail?.profilePic}`}
+                alt="COIN_ICON"
+                className="w-[16px] h-[16px]"
+              />
+              <span className="text-sm">
+                {isBuyMode ? `${agentDetail?.parentSymbol}` : `${agentDetail?.ticker}`}
+              </span>
             </div>
           </div>
         </div>
 
         {/* You Receive Section */}
         <div className="mb-6">
-          <div className="text-sm mb-3">You Receive</div>
+          <div className="mb-3 text-sm">You Receive</div>
           <div className="relative">
             <input
               type="text"
@@ -284,9 +294,15 @@ const TradeComponent = ({ticker}) => {
               className="w-full bg-[#2A2A2A] rounded-xl p-4"
               placeholder="0.0"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <img src="/images/sui.svg" alt="SUI" className="w-[16px] h-[16px]" />
-              <span className="text-sm">{!isBuyMode ? "SUI" : "MONA"}</span>
+            <div className="absolute flex items-center gap-2 -translate-y-1/2 right-4 top-1/2">
+              <img
+                src={!isBuyMode ? `${agentDetail?.parentUrl}` : `${agentDetail?.profilePic}`}
+                alt="SUI"
+                className="w-[16px] h-[16px]"
+              />
+              <span className="text-sm">
+                {!isBuyMode ? `${agentDetail?.parentSymbol}` : `${agentDetail?.ticker}`}
+              </span>
             </div>
           </div>
         </div>
@@ -294,7 +310,7 @@ const TradeComponent = ({ticker}) => {
         <button
           className="w-full py-4 rounded-full bg-[#CCFF00] text-black transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={placeTrade}
-          disabled={tradeLoading || !amount || loading}
+          disabled={tradeLoading || !amount || loading || amount <= 0.0}
         >
           {tradeLoading ? (
             <div className="flex items-center justify-center gap-2">
