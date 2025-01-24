@@ -9,6 +9,7 @@ import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-ki
 
 const TradeComponent = () => {
   const { openSnackbar } = useSnackbar();
+  const [orderId, setOrderId] = useState("");
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState("");
   const [receivedAmount, setReceivedAmount] = useState("");
@@ -58,6 +59,30 @@ const TradeComponent = () => {
       openSnackbar("error", "Failed to fetch balance");
     }
   };
+  const postDigest = async (digest) => {
+    try {
+      const response = await fetch(`${FANTV_API_URL}/v1/trade/order/${orderId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "client-sdk-type": "typescript",
+          "client-sdk-version": "1.7.0",
+          "client-target-api-version": "1.32.0",
+        },
+        body: JSON.stringify({
+          digest: digest,
+        }),
+      });
+      const data = await response.json();
+      if (data.result && data.result.totalBalance) {
+        setBalance(Number(data.result.totalBalance) / 1e9);
+        console.log(balance);
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      openSnackbar("error", "Failed to fetch balance");
+    }
+  };
 
   // Debounced amount for API calls
   useEffect(() => {
@@ -85,6 +110,7 @@ const TradeComponent = () => {
         }-receive?ticker=%24MSC1&amount=${value}`
       );
       setReceivedAmount(response.data.value);
+      setOrderId(response.data.orderId);
     } catch (error) {
       console.error("Error fetching receive amount:", error);
       setError("Failed to calculate received amount");
@@ -110,10 +136,11 @@ const TradeComponent = () => {
   const handleTransaction = async (data) => {
     try {
       const tx = new Transaction();
-      const [coin] = tx.splitCoins(data?.splitObject, [
-        tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
-      ]);
+      // const [coin] = tx.splitCoins(data?.splitObject, [
+      //   tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
+      // ]);
       tx.moveCall({
+        package: data?.package,
         package: data?.package,
         module: data?.module,
         typeArguments: data?.typeArguments,
@@ -121,9 +148,10 @@ const TradeComponent = () => {
         arguments: [
           tx.object(data?.arguments?.[0]),
           tx.object(data?.arguments?.[1]),
-          tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
-          tx.object(coin),
+          tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]))),
+          tx.object(data?.splitObject),
         ],
+        gasBudget: 1000000000,
       });
       signAndExecuteTransaction(
         {
@@ -134,6 +162,7 @@ const TradeComponent = () => {
             console.log("Transaction executed:", result);
             openSnackbar("success", "Transaction successful");
             setDigest(result.digest);
+            postDigest(result.digest);
             setError("");
           },
           onError: (err) => {
