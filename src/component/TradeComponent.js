@@ -10,6 +10,7 @@ import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-ki
 const TradeComponent = ({ agentDetail }) => {
   const { openSnackbar } = useSnackbar();
   const [orderId, setOrderId] = useState("");
+  let globalOrderId;
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState("");
   const [receivedAmount, setReceivedAmount] = useState("");
@@ -58,20 +59,39 @@ const TradeComponent = ({ agentDetail }) => {
     }
   };
 
+  const getToken = () => {
+    if (
+      typeof window !== "undefined" &&
+      (localStorage.getItem("accessToken") || localStorage.getItem("guestAccessToken"))
+    ) {
+      let token = localStorage.getItem("accessToken");
+      console.log("🚀 ~ getToken ~ token:", token);
+
+      if (!!!token) {
+        let guestAccesToken = localStorage.getItem("guestAccessToken");
+        return guestAccesToken;
+      }
+      return token;
+    }
+    // return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGJmNjZmZGEwODhmYjJkNTFjZmI0OTIiLCJpYXQiOjE3MzQwMDU1NjAsImV4cCI6MTc2NTU2MzE2MCwidHlwZSI6ImFjY2VzcyJ9.Gv6m6yLZh6DsNkpchaehYCsyOpNTUZ1Nv5SVyHhwCiY";
+  };
+
   const postDigest = async (digest) => {
     try {
-      const response = await fetch(`${FANTV_API_URL}/v1/trade/order/${orderId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "client-sdk-type": "typescript",
-          "client-sdk-version": "1.7.0",
-          "client-target-api-version": "1.32.0",
-        },
-        body: JSON.stringify({
-          digest: digest,
-        }),
-      });
+      const response = await fetch(
+        `${FANTV_API_URL}/v1/trade/order/${globalOrderId || globalOrderId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "client-sdk-type": "typescript",
+            "client-sdk-version": "1.7.0",
+            "client-target-api-version": "1.32.0",
+            Authorization: "Bearer " + getToken(),
+          },
+          body: JSON.stringify(digest),
+        }
+      );
       const data = await response.json();
       if (data.result && data.result.totalBalance) {
         setBalance(Number(data.result.totalBalance) / 1e9);
@@ -108,6 +128,7 @@ const TradeComponent = ({ agentDetail }) => {
         }&amount=${value}`
       );
       setReceivedAmount(response.data.value);
+      globalOrderId = response.data.orderId;
       setOrderId(response.data.orderId);
     } catch (error) {
       console.error("Error fetching receive amount:", error);
@@ -160,7 +181,9 @@ const TradeComponent = ({ agentDetail }) => {
             console.log("Transaction executed:", result);
             openSnackbar("success", "Transaction successful");
             setDigest(result.digest);
-            postDigest(result.digest);
+            postDigest({
+              digest: result.digest,
+            });
             setError("");
           },
           onError: (err) => {

@@ -280,11 +280,11 @@ export default function Home() {
           </div>
 
           {/* Pagination */}
-          <div className="mt-4 flex justify-center">
+          {/* <div className="mt-4 flex justify-center">
             <div className="bg-[#FFFFFF]/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm">
               Showing 1-100 of 900
             </div>
-          </div>
+          </div> */}
         </div>
       </main>
       <div className="h-[100px]"></div>

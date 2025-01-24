@@ -17,11 +17,11 @@ const Footer = () => {
       <Container>
         <Grid container>
           {/* Logo and Description Section */}
-          <Grid item xs={12} md={8}>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-              <Box component="img" src="/images/footer-logo.png" alt="FANTV" sx={{ height: 36 }} />
+          <Grid item xs={12} md={12}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
+              <Box component="img" src="/images/footer-logo.svg" alt="FANTV" sx={{ height: 66 }} />
             </Box>
-            <Typography variant="body2" sx={{ mb: 2, color: "#FFFDD4" }}>
+            {/* <Typography variant="body2" sx={{ mb: 2, color: "#FFFDD4" }}>
               The end-to-end platform for
               <br /> creators powered by AI
             </Typography>
@@ -30,11 +30,10 @@ const Footer = () => {
             </Typography>
             <Typography variant="body2" sx={{ color: "#FFFDD480", fontSize: "0.875rem" }}>
               © 2024 FanTV. All rights reserved.
-            </Typography>
+            </Typography> */}
           </Grid>
 
-          {/* Company Section */}
-          <Grid item xs={12} md={2} sx={{ fontFamily: "Nohemi", fontSize: "16px" }}>
+          {/* <Grid item xs={12} md={2} sx={{ fontFamily: "Nohemi", fontSize: "16px" }}>
             <Typography
               variant="h6"
               sx={{ mb: 2, color: "#FFFDD4", fontFamily: "Nohemi", fontSize: "16px" }}
@@ -63,7 +62,6 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          {/* Keep in touch Section */}
           <Grid item xs={12} md={2}>
             <Typography
               variant="h6"
@@ -111,7 +109,7 @@ const Footer = () => {
                 </Link>
               ))}
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>

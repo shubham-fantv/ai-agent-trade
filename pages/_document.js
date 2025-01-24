@@ -15,28 +15,16 @@ class MyDocument extends Document {
           <link rel="preload" as="video" href="/video/bgVideo.webm" type="video/webm" />
           <link rel="preload" as="video" href="/video/tokenAnimation.webm" type="video/webm" />
 
-          <meta
-            name="name"
-            content="FanTV: AI Content Creation Platform To Create Video You Love"
-          />
-          <meta
-            name="description"
-            content="Discover FanTV, the platform that makes content creation easy and rewarding with tools for generation, video editing, platform perks & a community that supports you."
-          />
+          <meta name="name" content="Agent Nation - Ultimate AI Agent Marketplace on SUI" />
+          <meta name="description" content="Ultimate AI Agent Marketplace on SUI" />
           <meta
             name="image"
             content="https://assets.artistfirst.in/uploads/1736488883453-OGImageNew.png"
           />
           <meta property="og:url" content={process.env.NEXT_PUBLIC_WEB_URL} />
           <meta property="og:type" content="website" />
-          <meta
-            property="og:title"
-            content="FanTV: AI Content Creation Platform To Create Video You Love"
-          />
-          <meta
-            property="og:description"
-            content="Discover FanTV, the platform that makes content creation easy and rewarding with tools for generation, video editing, platform perks & a community that supports you."
-          />
+          <meta property="og:title" content="Agent Nation - Ultimate AI Agent Marketplace on SUI" />
+          <meta property="og:description" content="Ultimate AI Agent Marketplace on SUI" />
           <meta
             property="og:image"
             content="https://assets.artistfirst.in/uploads/1736488883453-OGImageNew.png"
@@ -44,12 +32,9 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta
             name="twitter:title"
-            content="FanTV: AI Content Creation Platform To Create Video You Love"
+            content="Agent Nation - Ultimate AI Agent Marketplace on SUI"
           />
-          <meta
-            name="twitter:description"
-            content="Discover FanTV, the platform that makes content creation easy and rewarding with tools for generation, video editing, platform perks & a community that supports you."
-          />
+          <meta name="twitter:description" content="Ultimate AI Agent Marketplace on SUI" />
           <meta
             name="twitter:image"
             content="https://assets.artistfirst.in/uploads/1736488883453-OGImageNew.png"

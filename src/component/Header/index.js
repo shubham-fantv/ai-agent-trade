@@ -189,12 +189,12 @@ const RevampHeader = ({ app }) => {
           <Box display="flex">
             <Box
               className="nav-logo"
-              onClick={() => window?.open(`https://fantv.world`, "_blank", "noopener,noreferrer")}
+              // onClick={() => window?.open(`https://fantv.world`, "_blank", "noopener,noreferrer")}
             >
               {isMobile ? (
                 <Box className="fan__TigerMobileLogo">
                   <img
-                    src="/images/footer-logo.png"
+                    src="/images/footer-logo.svg"
                     alt="mobile FanTV logo"
                     loading="eager"
                     decoding="async"
@@ -203,7 +203,7 @@ const RevampHeader = ({ app }) => {
               ) : (
                 <Box className="fan__tigerDekstopLogo">
                   <img
-                    src="/images/footer-logo.png"
+                    src="/images/footer-logo.svg"
                     alt="FanTV Logo"
                     width={140}
                     loading="eager"
