@@ -12,7 +12,9 @@ const TradeComponent = ({ agentDetail }) => {
   const [orderId, setOrderId] = useState("");
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState("");
+  console.log("🚀 ~ TradeComponent ~ amount:", amount);
   const [receivedAmount, setReceivedAmount] = useState("");
+  console.log("🚀 ~ TradeComponent ~ receivedAmount:", receivedAmount);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tradeLoading, setTradeLoading] = useState(false);
@@ -103,9 +105,9 @@ const TradeComponent = ({ agentDetail }) => {
       setLoading(true);
       setError("");
       const response = await fetcher.get(
-        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?${
+        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?ticker=${
           agentDetail.ticker
-        }=%24MSC1&amount=$${isBuyMode ? value : receivedAmount}`
+        }&amount=${value}`
       );
       setReceivedAmount(response.data.value);
       setOrderId(response.data.orderId);
@@ -176,20 +178,20 @@ const TradeComponent = ({ agentDetail }) => {
   };
 
   const placeTrade = async () => {
-    if (!balance) {
-      openSnackbar("error", "Error: Insufficient Token");
-      return;
-    }
+    // if (!balance) {
+    //   openSnackbar("error", "Error: Insufficient Token");
+    //   return;
+    // }
 
-    if (!amount || parseFloat(amount) <= 0) {
-      openSnackbar("error", "Please enter a valid amount");
-      return;
-    }
+    // if (!amount || parseFloat(amount) <= 0) {
+    //   openSnackbar("error", "Please enter a valid amount");
+    //   return;
+    // }
 
-    if (!currentAccount) {
-      openSnackbar("error", "Please connect your wallet to place trade");
-      return;
-    }
+    // if (!currentAccount) {
+    //   openSnackbar("error", "Please connect your wallet to place trade");
+    //   return;
+    // }
 
     try {
       setTradeLoading(true);
@@ -197,8 +199,8 @@ const TradeComponent = ({ agentDetail }) => {
       const response = await fetcher.post(
         `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}`,
         {
-          ticker: "$MSC1",
-          amount,
+          ticker: agentDetail.ticker,
+          amount: isBuyMode ? amount : receivedAmount,
         }
       );
 
