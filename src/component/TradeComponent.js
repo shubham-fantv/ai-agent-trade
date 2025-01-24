@@ -7,7 +7,7 @@ import { FANTV_API_URL } from "@/src/constant/constants";
 import BondingCurve from "./BondingCurve";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 
-const TradeComponent = () => {
+const TradeComponent = ({ticker}) => {
   const { openSnackbar } = useSnackbar();
   const [orderId, setOrderId] = useState("");
   const [isBuyMode, setIsBuyMode] = useState(true);
@@ -104,10 +104,13 @@ const TradeComponent = () => {
     try {
       setLoading(true);
       setError("");
+      console.log(value, receivedAmount, isBuyMode)
       const response = await fetcher.get(
         `${FANTV_API_URL}/v1/trade/${
           isBuyMode ? "buy" : "sell"
-        }-receive?ticker=%24MSC1&amount=${value}`
+        }-receive?ticker=${ticker}&amount=${
+          isBuyMode ? value : receivedAmount
+        }`
       );
       setReceivedAmount(response.data.value);
       setOrderId(response.data.orderId);
@@ -137,7 +140,7 @@ const TradeComponent = () => {
     try {
       const tx = new Transaction();
       const [coin] = tx.splitCoins(data?.splitObject, [
-        tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]) * 1_000_000)),
+        tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]))),
       ]);
       tx.moveCall({
         package: data?.package,

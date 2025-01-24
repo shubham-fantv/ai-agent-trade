@@ -205,7 +205,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
               </div>
             </div>
           </div>
-          <TradeComponent />
+          <TradeComponent ticker={agentDetail?.ticker} />
         </div>
       </div>
     </div>
