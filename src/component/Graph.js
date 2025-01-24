@@ -28,7 +28,7 @@ const Graph = ({ agentDetail }) => {
 
     const groupedData = prices.reduce((acc, [timestamp, price], idx) => {
       const date = new Date(timestamp);
-      const roundedMinutes = Math.floor(date.getMinutes() / 15) * 15;
+      const roundedMinutes = Math.floor(date.getMinutes() / 0.5) * 0.5;
       const roundedDate = new Date(date);
       roundedDate.setMinutes(roundedMinutes, 0, 0);
       const intervalKey = roundedDate.getTime();
