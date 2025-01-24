@@ -120,9 +120,9 @@ const TradeComponent = ({ agentDetail }) => {
       setLoading(true);
       setError("");
       const response = await fetcher.get(
-        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?${
+        `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}-receive?ticker=${
           agentDetail.ticker
-        }=%24MSC1&amount=$${isBuyMode ? value : receivedAmount}`
+        }&amount=${value}`
       );
       setReceivedAmount(response.data.value);
       globalOrderId = response.data.orderId;
@@ -153,7 +153,7 @@ const TradeComponent = ({ agentDetail }) => {
     try {
       const tx = new Transaction();
       const [coin] = tx.splitCoins(data?.splitObject, [
-        tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]))),
+        tx.pure.u64(BigInt(parseFloat(data?.splitAmount))),
       ]);
       tx.moveCall({
         package: data?.package,
@@ -194,20 +194,20 @@ const TradeComponent = ({ agentDetail }) => {
   };
 
   const placeTrade = async () => {
-    if (!balance) {
-      openSnackbar("error", "Error: Insufficient Token");
-      return;
-    }
+    // if (!balance) {
+    //   openSnackbar("error", "Error: Insufficient Token");
+    //   return;
+    // }
 
-    if (!amount || parseFloat(amount) <= 0) {
-      openSnackbar("error", "Please enter a valid amount");
-      return;
-    }
+    // if (!amount || parseFloat(amount) <= 0) {
+    //   openSnackbar("error", "Please enter a valid amount");
+    //   return;
+    // }
 
-    if (!currentAccount) {
-      openSnackbar("error", "Please connect your wallet to place trade");
-      return;
-    }
+    // if (!currentAccount) {
+    //   openSnackbar("error", "Please connect your wallet to place trade");
+    //   return;
+    // }
 
     try {
       setTradeLoading(true);
@@ -215,7 +215,7 @@ const TradeComponent = ({ agentDetail }) => {
       const response = await fetcher.post(
         `${FANTV_API_URL}/v1/trade/${isBuyMode ? "buy" : "sell"}`,
         {
-          ticker: "$MSC1",
+          ticker: agentDetail.ticker,
           amount,
         }
       );
