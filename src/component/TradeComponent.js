@@ -176,20 +176,20 @@ const TradeComponent = ({ agentDetail }) => {
   };
 
   const placeTrade = async () => {
-    if (!balance) {
-      openSnackbar("error", "Error: Insufficient Token");
-      return;
-    }
+    // if (!balance) {
+    //   openSnackbar("error", "Error: Insufficient Token");
+    //   return;
+    // }
 
-    if (!amount || parseFloat(amount) <= 0) {
-      openSnackbar("error", "Please enter a valid amount");
-      return;
-    }
+    // if (!amount || parseFloat(amount) <= 0) {
+    //   openSnackbar("error", "Please enter a valid amount");
+    //   return;
+    // }
 
-    if (!currentAccount) {
-      openSnackbar("error", "Please connect your wallet to place trade");
-      return;
-    }
+    // if (!currentAccount) {
+    //   openSnackbar("error", "Please connect your wallet to place trade");
+    //   return;
+    // }
 
     try {
       setTradeLoading(true);
