@@ -14,7 +14,9 @@ const TradeComponent = ({ agentDetail }) => {
   let globalOrderId;
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState("");
+  console.log("🚀 ~ TradeComponent ~ amount:", amount);
   const [receivedAmount, setReceivedAmount] = useState("");
+  console.log("🚀 ~ TradeComponent ~ receivedAmount:", receivedAmount);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tradeLoading, setTradeLoading] = useState(false);
@@ -167,7 +169,7 @@ const TradeComponent = ({ agentDetail }) => {
           jsonrpc: "2.0",
           id: 1,
           method: "suix_getCoins",
-          params: [currentAccount.address, agentDetail.parentId],
+          params: [currentAccount.address, isBuyMode ? agentDetail.parentId : agentDetail.tickerId],
         }),
       });
       const mergeData = await response.json();
@@ -180,7 +182,7 @@ const TradeComponent = ({ agentDetail }) => {
         const primaryCoin = allCoins[0]; // Choose the first coin as the primary
         const coinsToMerge = allCoins.slice(1); // Use the rest for merging
 
-        if (totalBalance <= parseFloat(data?.splitAmount)) {
+        if (totalBalance > parseFloat(amount * 1000000)) {
           if (coinsToMerge.length > 0) {
             tx.mergeCoins(
               tx.object(primaryCoin),
@@ -190,7 +192,7 @@ const TradeComponent = ({ agentDetail }) => {
         }
 
         const [coin] = tx.splitCoins(primaryCoin, [
-          tx.pure.u64(BigInt(parseFloat(data?.splitAmount))),
+          tx.pure.u64(BigInt(parseFloat(amount * 1000000))),
         ]);
         tx.moveCall({
           package: data?.package,
