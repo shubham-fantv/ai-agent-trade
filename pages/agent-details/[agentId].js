@@ -255,12 +255,12 @@ export default function AgentDetails({ agentDetail, agentId }) {
             <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6'>
               {/* Tabs */}
               <div className='flex space-x-4 border-b border-white/10'>
-                <TabButton
+                {/* <TabButton
                   isActive={tab.label === tabs[0].label}
                   onClick={() => setTab(tabs[0])}
                 >
                   Trades
-                </TabButton>
+                </TabButton> */}
                 <TabButton
                   isActive={tab.label === tabs[1].label}
                   onClick={() => setTab(tabs[1])}
@@ -281,7 +281,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                   ))}
                 </div>
               )}
-              {tab.component}
+              {tabs[1].component}
             </div>
           </div>
           <TradeComponent agentDetail={agentDetail} />
