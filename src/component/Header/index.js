@@ -207,6 +207,7 @@ const RevampHeader = ({ app }) => {
                 <Box className='fan__TigerMobileLogo'>
                   <img
                     src={'/images/ai/aiNationLogo.png'}
+                    style={{ height: '40px', width: '180px' }}
                     alt='mobile FanTV logo'
                     loading='eager'
                     decoding='async'
@@ -254,41 +255,41 @@ const RevampHeader = ({ app }) => {
               </Box>
             )}
           </Box>
-          {!isMobile && (
-            <Box>
-              <Box sx={styles.btnContainer} onClick={handleWalletClick}>
-                <img src='/images/rocket-launch.svg' />
-                {isWalletConnected ? (
-                  <Button
-                    sx={{
-                      color: '#000000',
-                      fontFamily: 'Nohemi',
-                      fontSize: '16px',
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                      },
-                    }}
-                  >
-                    {formatWalletAddress(walletState?.address)}
-                  </Button>
-                ) : (
-                  <Button
-                    sx={{
-                      color: '#000000',
-                      fontFamily: 'Nohemi',
-                      fontSize: '16px',
-                    }}
-                  >
-                    Connect Wallet
-                  </Button>
-                )}
-              </Box>
-              <WalletConnectModal
-                anchorEl={walletAnchorEl}
-                onClose={handleWalletClose}
-              />
+          {/* {!isMobile && ( */}
+          <Box>
+            <Box sx={styles.btnContainer} onClick={handleWalletClick}>
+              <img src='/images/rocket-launch.svg' />
+              {isWalletConnected ? (
+                <Button
+                  sx={{
+                    color: '#000000',
+                    fontFamily: 'Nohemi',
+                    fontSize: '16px',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                    },
+                  }}
+                >
+                  {formatWalletAddress(walletState?.address)}
+                </Button>
+              ) : (
+                <Button
+                  sx={{
+                    color: '#000000',
+                    fontFamily: 'Nohemi',
+                    fontSize: '16px',
+                  }}
+                >
+                  Connect Wallet
+                </Button>
+              )}
             </Box>
-          )}
+            <WalletConnectModal
+              anchorEl={walletAnchorEl}
+              onClose={handleWalletClose}
+            />
+          </Box>
+          {/* )} */}
           <Drawer
             anchor='right'
             open={isMenuOpen}

@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createChart } from 'lightweight-charts';
 import { FANTV_API_URL } from '@/src/constant/constants';
+// import DexScreenerEmbed from './AdvanceGraph';
 
 const POLLING_INTERVAL = 2000; // 2 seconds in milliseconds
 
@@ -431,6 +432,8 @@ V: ${volume.value.toFixed(2)}`;
     }
   }, [candlestickData]);
 
+  console.log(agentDetail?.tickerId);
+
   return (
     <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[530px] mb-6 relative'>
       <div className='flex items-center justify-between'>
@@ -451,6 +454,7 @@ V: ${volume.value.toFixed(2)}`;
         ) : (
           <div className='bg-[#222222] rounded-xl w-full h-[400px]'>
             <div ref={chartContainerRef} className='w-full h-[400px]' />
+            {/* <DexScreenerEmbed pairAddress={agentDetail?.tickerId} /> */}
           </div>
         )}
       </div>
