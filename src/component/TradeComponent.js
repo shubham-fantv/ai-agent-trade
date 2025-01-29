@@ -74,7 +74,6 @@ const TradeComponent = ({ agentDetail }) => {
       }
       return token;
     }
-    // return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGJmNjZmZGEwODhmYjJkNTFjZmI0OTIiLCJpYXQiOjE3MzQwMDU1NjAsImV4cCI6MTc2NTU2MzE2MCwidHlwZSI6ImFjY2VzcyJ9.Gv6m6yLZh6DsNkpchaehYCsyOpNTUZ1Nv5SVyHhwCiY";
   };
 
   const postDigest = async (digest) => {

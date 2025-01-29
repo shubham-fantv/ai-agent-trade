@@ -1,30 +1,129 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createChart } from 'lightweight-charts';
 import { FANTV_API_URL } from '@/src/constant/constants';
+
+const POLLING_INTERVAL = 2000; // 2 seconds in milliseconds
 
 const Graph = ({ agentDetail }) => {
   const [noData, setNoData] = useState(false);
   const [candlestickData, setCandlestickData] = useState([]);
+  const [lastTimestamp, setLastTimestamp] = useState(null);
   const chartContainerRef = useRef();
   const tooltipRef = useRef(null);
+  const chartRef = useRef(null);
+  const pollingRef = useRef(null);
 
-  const fetchGraphData = async () => {
-    const response = await fetch(
-      `${FANTV_API_URL}/v1/trade/graph/${agentDetail?.ticker}?days=3`
-    );
-    const json = await response.json();
-    const prices = json?.data?.price;
-    const volumes = json?.data?.volume;
+  // Initial data fetch without timestamp
+  const fetchInitialData = async () => {
+    try {
+      const response = await fetch(
+        `${FANTV_API_URL}/v1/trade/graph/${agentDetail?.ticker}`
+      );
+      const json = await response.json();
+      const prices = json?.data?.price;
+      const volumes = json?.data?.volume;
 
-    if (!prices.length || !volumes.length) {
+      if (!prices?.length || !volumes?.length) {
+        setNoData(true);
+        return;
+      }
+
+      const processedData = processGraphData(prices, volumes);
+      setCandlestickData(processedData);
+
+      // Set the last timestamp for subsequent polling
+      const lastDataPoint = prices[prices.length - 1];
+      setLastTimestamp(lastDataPoint[0]);
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
       setNoData(true);
-      return;
     }
+  };
 
-    if (!prices || !volumes) {
-      setNoData(true);
-      return;
+  // Fetch new data with timestamp for polling
+  // Modify the fetchNewData function
+  const fetchNewData = async () => {
+    if (!lastTimestamp) return;
+
+    try {
+      const response = await fetch(
+        `${FANTV_API_URL}/v1/trade/graph/${agentDetail?.ticker}?timestampSec=${POLLING_INTERVAL}`
+      );
+      const json = await response.json();
+      const prices = json?.data?.price;
+      const volumes = json?.data?.volume;
+
+      if (!prices?.length || !volumes?.length) return;
+
+      // Process new data
+      const processedData = processGraphData(prices, volumes);
+
+      // Check for existing data and filter out duplicates
+      setCandlestickData((prevData) => {
+        // Create a map of existing times for quick lookup
+        const existingTimes = new Set(prevData.candles.map((c) => c.time));
+
+        // Filter out any new candles that already exist
+        const newCandles = processedData.candles.filter(
+          (candle) => !existingTimes.has(candle.time)
+        );
+        const newVolumes = processedData.volumes.filter(
+          (volume) => !existingTimes.has(volume.time)
+        );
+
+        // If no new data, return previous state unchanged
+        if (newCandles.length === 0) {
+          return prevData;
+        }
+
+        // Sort all data by time to ensure ascending order
+        const allCandles = [...prevData.candles, ...newCandles].sort(
+          (a, b) => a.time - b.time
+        );
+        const allVolumes = [...prevData.volumes, ...newVolumes].sort(
+          (a, b) => a.time - b.time
+        );
+
+        return {
+          candles: allCandles,
+          volumes: allVolumes,
+        };
+      });
+
+      // Update chart if it exists and there's new data
+      if (chartRef.current) {
+        const { candleSeries, volumeSeries } = chartRef.current;
+
+        // Update only the latest candle if it exists
+        const latestCandle =
+          processedData.candles[processedData.candles.length - 1];
+        if (latestCandle) {
+          candleSeries.update(latestCandle);
+        }
+
+        // Update only the latest volume if it exists
+        const latestVolume =
+          processedData.volumes[processedData.volumes.length - 1];
+        if (latestVolume) {
+          volumeSeries.update(latestVolume);
+        }
+      }
+
+      // Update last timestamp only if we have new data
+      const lastDataPoint = prices[prices.length - 1];
+      if (lastDataPoint && lastDataPoint[0] > lastTimestamp) {
+        setLastTimestamp(lastDataPoint[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching new data:', error);
     }
+  };
+
+  // Modify the processGraphData function to ensure time ordering
+  const processGraphData = (prices, volumes) => {
+    // Sort prices by timestamp first
+    prices.sort((a, b) => a[0] - b[0]);
 
     const groupedData = prices.reduce((acc, [timestamp, price], idx) => {
       const date = new Date(timestamp);
@@ -44,7 +143,12 @@ const Graph = ({ agentDetail }) => {
     const formattedData = [];
     const volumeData = [];
 
-    for (const [interval, { prices, volumes }] of Object.entries(groupedData)) {
+    // Ensure sorted processing of intervals
+    const sortedIntervals = Object.entries(groupedData).sort(
+      (a, b) => Number(a[0]) - Number(b[0])
+    );
+
+    for (const [interval, { prices, volumes }] of sortedIntervals) {
       const open = prices[0];
       const high = Math.max(...prices);
       const low = Math.min(...prices);
@@ -70,13 +174,37 @@ const Graph = ({ agentDetail }) => {
       });
     }
 
-    setCandlestickData({ candles: formattedData, volumes: volumeData });
+    return {
+      candles: formattedData,
+      volumes: volumeData,
+    };
   };
 
+  // Initial data fetch
   useEffect(() => {
-    fetchGraphData();
-  }, []);
+    fetchInitialData();
 
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+      }
+    };
+  }, [agentDetail]);
+
+  // Set up polling after initial data is fetched
+  useEffect(() => {
+    if (lastTimestamp) {
+      pollingRef.current = setInterval(fetchNewData, POLLING_INTERVAL);
+
+      return () => {
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current);
+        }
+      };
+    }
+  }, [lastTimestamp]);
+
+  // Chart initialization and update effect
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.candles?.length > 0) {
       const prices = candlestickData.candles.flatMap((d) => [
@@ -97,7 +225,7 @@ const Graph = ({ agentDetail }) => {
 
       const chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
-        height: 250,
+        height: 400,
         layout: {
           background: { type: 'solid', color: '#1A1A1A' },
           textColor: '#d1d4dc',
@@ -181,6 +309,13 @@ const Graph = ({ agentDetail }) => {
         },
       });
 
+      // Store chart and series references for updates
+      chartRef.current = {
+        chart,
+        candleSeries: candlestickSeries,
+        volumeSeries: volumeSeries,
+      };
+
       chart.priceScale('volume').applyOptions({
         scaleMargins: {
           top: 0.8,
@@ -205,52 +340,42 @@ const Graph = ({ agentDetail }) => {
       });
       timeScale.fitContent();
 
-      const toolTipWidth = 120;
-      const toolTipHeight = 100;
-      const toolTipMargin = 10;
+      // Tooltip setup
+      const setupTooltip = () => {
+        const toolTip = document.createElement('div');
+        Object.assign(toolTip.style, {
+          position: 'absolute',
+          display: 'none',
+          padding: '8px',
+          boxSizing: 'border-box',
+          fontSize: '12px',
+          textAlign: 'left',
+          zIndex: '9999',
+          background: 'rgba(24, 24, 24, 0.95)',
+          color: 'white',
+          borderRadius: '4px',
+          fontFamily: 'monospace',
+          whiteSpace: 'pre',
+          pointerEvents: 'none',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          width: 'auto',
+        });
 
-      const toolTip = document.createElement('div');
-      toolTip.style.position = 'absolute';
-      toolTip.style.display = 'none';
-      toolTip.style.padding = '8px';
-      toolTip.style.boxSizing = 'border-box';
-      toolTip.style.fontSize = '12px';
-      toolTip.style.textAlign = 'left';
-      toolTip.style.zIndex = '9999';
-      toolTip.style.background = 'rgba(24, 24, 24, 0.95)';
-      toolTip.style.color = 'white';
-      toolTip.style.borderRadius = '4px';
-      toolTip.style.fontFamily = 'monospace';
-      toolTip.style.whiteSpace = 'pre';
-      toolTip.style.pointerEvents = 'none';
-      toolTip.style.border = '1px solid rgba(255, 255, 255, 0.1)';
-      toolTip.style.width = 'auto';
-      chartContainerRef.current.appendChild(toolTip);
-      tooltipRef.current = toolTip;
+        chartContainerRef.current.appendChild(toolTip);
+        tooltipRef.current = toolTip;
+
+        return toolTip;
+      };
+
+      const toolTip = setupTooltip();
 
       chart.subscribeCrosshairMove((param) => {
-        if (
-          !param ||
-          !param.point ||
-          !param.time ||
-          !chartContainerRef.current
-        ) {
+        if (!param?.point || !param?.time || !chartContainerRef.current) {
           toolTip.style.display = 'none';
           return;
         }
 
         const { x: coordinateX, y: coordinateY } = param.point;
-
-        if (
-          coordinateX < 0 ||
-          coordinateX > chartContainerRef.current.clientWidth ||
-          coordinateY < 0 ||
-          coordinateY > chartContainerRef.current.clientHeight
-        ) {
-          toolTip.style.display = 'none';
-          return;
-        }
-
         const data = candlestickData.candles.find((d) => d.time === param.time);
         const volume = candlestickData.volumes.find(
           (d) => d.time === param.time
@@ -269,12 +394,17 @@ L: ${formatPrice(data.low)}
 C: ${formatPrice(data.close)}
 V: ${volume.value.toFixed(2)}`;
 
+        const toolTipWidth = 120;
+        const toolTipHeight = 100;
+        const toolTipMargin = 10;
+
         let left = coordinateX + toolTipMargin;
+        let top = coordinateY + toolTipMargin;
+
         if (left > chartContainerRef.current.clientWidth - toolTipWidth) {
           left = coordinateX - toolTipMargin - toolTipWidth;
         }
 
-        let top = coordinateY + toolTipMargin;
         if (top > chartContainerRef.current.clientHeight - toolTipHeight) {
           top = coordinateY - toolTipHeight - toolTipMargin;
         }
@@ -302,7 +432,7 @@ V: ${volume.value.toFixed(2)}`;
   }, [candlestickData]);
 
   return (
-    <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[398px] mb-6 '>
+    <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[530px] mb-6 relative'>
       <div className='flex items-center justify-between'>
         <div>
           <h3 className='text-lg font-semibold'>
@@ -315,12 +445,12 @@ V: ${volume.value.toFixed(2)}`;
       </div>
       <div className='flex items-center justify-center mt-4 text-gray-500'>
         {noData ? (
-          <div className='w-full h-[240px] flex items-center justify-center'>
+          <div className='w-full h-[400px] flex items-center justify-center'>
             <p className='text-lg font-semibold'>No Data Available</p>
           </div>
         ) : (
-          <div className='bg-[#222222] rounded-xl w-full h-100'>
-            <div ref={chartContainerRef} className='w-full h-[240px]' />
+          <div className='bg-[#222222] rounded-xl w-full h-[400px]'>
+            <div ref={chartContainerRef} className='w-full h-[400px]' />
           </div>
         )}
       </div>

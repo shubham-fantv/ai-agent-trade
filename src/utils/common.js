@@ -49,7 +49,7 @@ export function formatWalletAddress(input) {
   }
 
   // Extract and return the formatted string
-  return `${input.slice(0, 12)}...${input.slice(-4)}`;
+  return `${input.slice(0, 8)}...${input.slice(input.length - 8)}`;
 }
 
 export function formatAddressInLeaderboard(address) {
