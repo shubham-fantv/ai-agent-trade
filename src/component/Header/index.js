@@ -206,7 +206,7 @@ const RevampHeader = ({ app }) => {
               {isMobile ? (
                 <Box className='fan__TigerMobileLogo'>
                   <img
-                    src='/images/footer-logo.svg'
+                    src={'/images/ai/aiNationLogo.png'}
                     alt='mobile FanTV logo'
                     loading='eager'
                     decoding='async'
@@ -215,9 +215,11 @@ const RevampHeader = ({ app }) => {
               ) : (
                 <Box className='fan__tigerDekstopLogo'>
                   <img
-                    src='/images/footer-logo.svg'
+                    src={'/images/ai/aiNationLogo.png'}
                     alt='FanTV Logo'
-                    width={140}
+                    width={200}
+                    height={100}
+                    style={{ height: '60px', width: '290px' }}
                     loading='eager'
                     decoding='async'
                   />

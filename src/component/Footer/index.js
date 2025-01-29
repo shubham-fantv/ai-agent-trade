@@ -1,25 +1,40 @@
-import React from "react";
-import { Box, Container, Grid, Typography, Link } from "@mui/material";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import Discord from "@mui/icons-material/Forum";
+import React from 'react';
+import { Box, Container, Grid } from '@mui/material';
+// import TwitterIcon from '@mui/icons-material/Twitter';
+// import InstagramIcon from '@mui/icons-material/Instagram';
+// import TelegramIcon from '@mui/icons-material/Telegram';
+// import Discord from '@mui/icons-material/Forum';
 
 const Footer = () => {
   return (
     <Box
       sx={{
-        bgcolor: "#1A1A1A",
-        py: "100px",
-        fontFamily: "Nohemi",
+        bgcolor: '#1A1A1A',
+        py: '100px',
+        fontFamily: 'Nohemi',
       }}
     >
       <Container>
         <Grid container>
           {/* Logo and Description Section */}
           <Grid item xs={12} md={12}>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
-              <Box component="img" src="/images/footer-logo.svg" alt="FANTV" sx={{ height: 66 }} />
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 2,
+              }}
+            >
+              <img
+                src={'/images/ai/aiNationLogo.png'}
+                alt='FanTV Logo'
+                width={200}
+                height={100}
+                style={{ height: '70px', width: '350px' }}
+                loading='eager'
+                decoding='async'
+              />
             </Box>
             {/* <Typography variant="body2" sx={{ mb: 2, color: "#FFFDD4" }}>
               The end-to-end platform for
