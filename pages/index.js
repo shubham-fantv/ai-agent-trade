@@ -5,8 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import fetcher from '@/src/dataProvider';
 import { FANTV_API_URL } from '@/src/constant/constants';
 import { formatWalletAddress } from '../src/utils/common';
+import useIsMobile from '../src/hooks/useIsMobile';
+import { useMediaQuery } from '@mui/material';
+import FilterTabs from '../src/component/Filters/TabFilters';
 
 export default function Home() {
+  const isMobile = useMediaQuery('(max-width:768px)');
+  console.log(isMobile, 'isMobile');
   const [tradeResult, setTradeResult] = useState();
 
   useQuery({
@@ -56,80 +61,19 @@ export default function Home() {
           Trade AI Agents
         </h1>
 
-        <div className='relative rounded-2xl overflow-hidden bg-gradient-to-b p-6 pb-8 from-[#CCFF00]/50 to-[#1E1E1E]'>
+        <div className='relative rounded-2xl overflow-hidden bg-gradient-to-b p-4 pb-8 from-[#CCFF00]/50 to-[#1E1E1E] min-h-[500px]'>
           <div className="absolute inset-0 bg-[url('/images/ai/home-bg.png')] bg-cover bg-center opacity-50 z-0"></div>
           <div className='absolute inset-0 bg-noise opacity-[0.15]'></div>
 
           <div className='relative z-10'>
             <div className='flex flex-col items-center justify-between gap-4 mb-8 sm:flex-row'>
               {/* Filter Tabs */}
-              <div className='flex gap-1 p-2 overflow-x-auto rounded-full bg-white/20 backdrop-blur-sm'>
-                <button
-                  className={`px-5  py-1 rounded-full text-sm font-medium transition-all flex-shrink-0
-                    ${
-                      activeTab === 'all'
-                        ? 'bg-white text-olive shadow-inner'
-                        : 'hover:bg-white/10'
-                    }`}
-                  onClick={() => setActiveTab('all')}
-                >
-                  All
-                </button>
-                <button
-                  className={`px-5 py-1 rounded-full text-sm font-medium transition-all flex-shrink-0
-                    ${
-                      activeTab === 'video'
-                        ? 'bg-white text-olive shadow-inner'
-                        : 'hover:bg-white/10'
-                    }`}
-                  onClick={() => setActiveTab('video')}
-                >
-                  Video
-                </button>
-                <button
-                  className={`px-5 py-1 rounded-full text-sm font-medium transition-all flex-shrink-0
-                    ${
-                      activeTab === 'chat'
-                        ? 'bg-white text-olive shadow-inner'
-                        : 'hover:bg-white/10'
-                    }`}
-                  onClick={() => setActiveTab('chat')}
-                >
-                  Chat
-                </button>
-                <button
-                  className={`px-5 py-1 rounded-full text-sm font-medium transition-all flex-shrink-0
-                    ${
-                      activeTab === 'audio'
-                        ? 'bg-white text-olive shadow-inner'
-                        : 'hover:bg-white/10'
-                    }`}
-                  onClick={() => setActiveTab('audio')}
-                >
-                  Audio
-                </button>
-                <button
-                  className={`px-5 py-1 rounded-full text-sm font-medium transition-all flex-shrink-0
-                    ${
-                      activeTab === 'character'
-                        ? 'bg-white text-olive shadow-inner'
-                        : 'hover:bg-white/10'
-                    }`}
-                  onClick={() => setActiveTab('character')}
-                >
-                  Character
-                </button>
-                <button
-                  className={`px-5 py-1 rounded-full text-sm font-medium transition-all flex-shrink-0
-                    ${
-                      activeTab === 'entertainment'
-                        ? 'bg-white text-olive shadow-inner'
-                        : 'hover:bg-white/10'
-                    }`}
-                  onClick={() => setActiveTab('entertainment')}
-                >
-                  Entertainment
-                </button>
+              <div className='w-full sm:w-auto'>
+                <FilterTabs
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  isMobile={isMobile}
+                />
               </div>
 
               <div className='flex items-center flex-shrink-0 gap-2'>
@@ -200,19 +144,32 @@ export default function Home() {
             </div>
 
             {/* Horizontally scrollable header */}
-            <div className='grid grid-cols-7 text-sm mb-2 px-4 min-w-[1000px] overflow-x-auto'>
-              <div className='text-left'>AI Agents</div>
-              <div className='text-right'>Market Cap</div>
-              <div className='text-right'>24 Chg</div>
-              <div className='text-right'>TVL</div>
-              <div className='text-right'>Holders</div>
-              <div className='text-right'>24H vol.</div>
-              <div className='text-right'>Category</div>
-            </div>
+            {!isMobile && (
+              <div className='grid grid-cols-7 text-sm mb-2 px-4 min-w-[1100px] overflow-x-auto'>
+                <div className='text-left'>AI Agents</div>
+                <div className='text-right'>Market Cap</div>
+                <div className='text-right'>24 Chg</div>
+                <div className='text-right'>TVL</div>
+                <div className='text-right'>Holders</div>
+                <div className='text-right'>24H vol.</div>
+                <div className='text-right'>Category</div>
+              </div>
+            )}
 
-            {/* Horizontally scrollable table */}
             <div className='rounded-xl overflow-x-auto bg-[#1E1E1E] backdrop-blur-sm text-sm'>
-              <div className='min-w-[1000px]'>
+              <div className={`min-w-[1100px]`}>
+                {isMobile && (
+                  <div className='grid grid-cols-7 text-sm mb-2 px-4 pt-4 min-w-[800px] overflow-x-auto'>
+                    <div className='text-left'>AI Agents</div>
+                    <div className='text-right'>Market Cap</div>
+                    <div className='text-right'>24 Chg</div>
+                    <div className='text-right'>TVL</div>
+                    <div className='text-right'>Holders</div>
+                    <div className='text-right'>24H vol.</div>
+                    <div className='text-right'>Category</div>
+                  </div>
+                )}
+
                 {filteredResults?.map((agent, idx) => {
                   return (
                     <a
@@ -229,8 +186,8 @@ export default function Home() {
                         />
                         <div>
                           <div className=' text-[14px] font-normal flex items-center'>
-                            {agent?.name}
-                            <span className='text-[12px] px-1.5 rounded bg-black/20 '>
+                            {/* {agent?.name} */}
+                            <span className='text-[14px] px-1.5 rounded bg-black/20 '>
                               {agent?.ticker}
                             </span>
                             <svg
@@ -355,7 +312,6 @@ export default function Home() {
           </div> */}
         </div>
       </main>
-      <div className='h-[100px]'></div>
     </div>
   );
 }

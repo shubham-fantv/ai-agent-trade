@@ -2,7 +2,7 @@ import React from 'react';
 
 const DexScreenerEmbed = ({
   pairAddress = '0xB9a573f1d363707741c6B30326FA794F0134440e',
-  chain = 'base',
+  chain = 'sui',
 }) => {
   return (
     <>
