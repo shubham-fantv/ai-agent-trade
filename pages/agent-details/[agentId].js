@@ -1,16 +1,16 @@
-import React from 'react';
 import { FANTV_API_URL } from '@/src/constant/constants';
 import fetcher from '@/src/dataProvider';
-import { ArrowLeft, Instagram, Send, Twitter } from 'lucide-react';
-import Head from 'next/head';
-import Link from 'next/link';
-import Graph from '../../src/component/Graph';
-import TradeComponent from '../../src/component/TradeComponent';
-import { formatWalletAddress } from '../../src/utils/common';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { ArrowLeft, Instagram, Send, Twitter } from 'lucide-react';
+import Head from 'next/head';
+import Link from 'next/link';
+import React, { useState } from 'react';
+import Graph from '../../src/component/Graph/Graph';
+import TradeComponent from '../../src/component/TradeComponent';
+import TradeTable from '../../src/component/TradeTable/TradeTable';
+import { formatWalletAddress } from '../../src/utils/common';
 import { agents } from '../trade';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
@@ -39,6 +39,27 @@ const getCategoryByTag = (tag) => {
   return agent ? agent.category : 'Category not found';
 };
 
+const TabButton = ({ isActive, onClick, children }) => {
+  return (
+    <button
+      className={`
+      px-4 py-2 
+      text-white
+      transition-all
+      border-b-2
+      ${
+        isActive
+          ? 'border-white font-medium'
+          : 'border-transparent hover:border-white/50'
+      }
+    `}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
 export default function AgentDetails({ agentDetail, agentId }) {
   const [copied, setCopied] = useState(false);
 
@@ -51,6 +72,47 @@ export default function AgentDetails({ agentDetail, agentId }) {
       console.error('Failed to copy text: ', err);
     }
   };
+
+  const tabs = [
+    {
+      id: 0,
+      label: 'Trades',
+      component: (
+        <div className='min-h-screen bg-[#222222]'>
+          <div className='mt-6 max-w-7xl'>
+            <h4 className='mb-2 font-bold'>Recent Trades</h4>
+            <TradeTable />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 0,
+      label: 'Summary',
+      component: (
+        <div className='mt-6'>
+          <h4 className='mb-2 font-bold'>Summary</h4>
+          <p className='mb-4 text-sm text-gray-400'>
+            {agentDetail?.description}
+          </p>
+
+          {agentDetail?.highLights && (
+            <h4 className='mb-2 font-bold'>Highlights</h4>
+          )}
+          {agentDetail?.highLights &&
+            agentDetail?.highLights?.map((item) => {
+              return (
+                <ul className='text-sm text-gray-400 list-disc list-inside'>
+                  <li>{'item'}</li>
+                </ul>
+              );
+            })}
+        </div>
+      ),
+    },
+  ];
+
+  const [tab, setTab] = useState(tabs[0]);
   return (
     <div className='min-h-screen bg-[#1A1A1A] text-white pt-24 px-4 sm:px-6'>
       <Head>
@@ -132,8 +194,8 @@ export default function AgentDetails({ agentDetail, agentId }) {
               </div>
 
               <div className='flex items-center gap-1 mb-3'>
-                <div className='w-full sm:w-[195px] h-[32px] px-2 text-[14px] text-[#CCFF00] bg-[#353B1A] flex justify-between items-center gap-1 border-[2px] border-[#CCFF00]/30 rounded-[8px] m-[1px]'>
-                  {formatWalletAddress(agentDetail?.fieldObject)}
+                <div className='w-full sm:w-[auto] h-[32px] px-2 text-[14px] text-[#CCFF00] bg-[#353B1A] flex justify-between items-center gap-1 border-[2px] border-[#CCFF00]/30 rounded-[8px] m-[1px]'>
+                  {formatWalletAddress(agentDetail?.tickerId)}
                   {copied ? (
                     <span className='text-xs'>Copied!</span>
                   ) : (
@@ -190,16 +252,21 @@ export default function AgentDetails({ agentDetail, agentId }) {
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-3'>
           <div className='col-span-2'>
             <Graph agentDetail={agentDetail} />
-            {/* What does it do Section */}
             <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6'>
               {/* Tabs */}
-              <div className='flex gap-4 mb-4 border-b border-gray-700'>
-                {/* <button className='px-4 py-2 text-gray-400 bg-transparent border-b-2 border-transparent hover:text-white hover:border-white'>
+              <div className='flex space-x-4 border-b border-white/10'>
+                {/* <TabButton
+                  isActive={tab.label === tabs[0].label}
+                  onClick={() => setTab(tabs[0])}
+                >
                   Trades
-                </button> */}
-                <button className='px-4 py-2 text-white border-b-2 border-white'>
+                </TabButton> */}
+                <TabButton
+                  isActive={tab.label === tabs[1].label}
+                  onClick={() => setTab(tabs[1])}
+                >
                   What does it do
-                </button>
+                </TabButton>
               </div>
               {agentDetail?.aiAgents && (
                 <div className='bg-[#1E1E1E] flex gap-2 rounded-[24px] p-2 w-full overflow-x-scroll'>
@@ -214,25 +281,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                   ))}
                 </div>
               )}
-
-              <div className='mt-6'>
-                <h4 className='mb-2 font-bold'>Summary</h4>
-                <p className='mb-4 text-sm text-gray-400'>
-                  {agentDetail?.description}
-                </p>
-
-                {agentDetail?.highLights && (
-                  <h4 className='mb-2 font-bold'>Highlights</h4>
-                )}
-                {agentDetail?.highLights &&
-                  agentDetail?.highLights?.map((item) => {
-                    return (
-                      <ul className='text-sm text-gray-400 list-disc list-inside'>
-                        <li>{'item'}</li>
-                      </ul>
-                    );
-                  })}
-              </div>
+              {tabs[1].component}
             </div>
           </div>
           <TradeComponent agentDetail={agentDetail} />
