@@ -20,7 +20,7 @@ const SnackBar = memo(
     return (
       <MuiSnackbar
         open={snackbar?.show}
-        autoHideDuration={5000}
+        autoHideDuration={10000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         TransitionComponent={TransitionComponent}

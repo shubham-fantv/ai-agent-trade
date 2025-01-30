@@ -16,7 +16,9 @@ const TradeComponent = ({ agentDetail, graphData }) => {
   let globalOrderId;
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState('');
+  console.log('🚀 ~ TradeComponent ~ amount:', amount);
   const [receivedAmount, setReceivedAmount] = useState('');
+  console.log('🚀 ~ TradeComponent ~ receivedAmount:', receivedAmount);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tradeLoading, setTradeLoading] = useState(false);
@@ -26,11 +28,6 @@ const TradeComponent = ({ agentDetail, graphData }) => {
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
 
   // Fetch balance when account changes
-  useEffect(() => {
-    if (currentAccount?.address) {
-      fetchBalance(currentAccount.address);
-    }
-  }, [currentAccount]);
 
   const fetchBalance = async (address) => {
     try {
@@ -58,6 +55,12 @@ const TradeComponent = ({ agentDetail, graphData }) => {
       openSnackbar('error', 'Failed to fetch balance');
     }
   };
+
+  useEffect(() => {
+    if (currentAccount?.address) {
+      fetchBalance(currentAccount.address);
+    }
+  }, [currentAccount]);
 
   const getToken = () => {
     if (
@@ -152,43 +155,81 @@ const TradeComponent = ({ agentDetail, graphData }) => {
   };
 
   const handleTransaction = async (data) => {
+    const tx = new Transaction();
+
     try {
-      const tx = new Transaction();
-      const [coin] = tx.splitCoins(data?.splitObject, [
-        tx.pure.u64(BigInt(parseFloat(data?.splitAmount))),
-      ]);
-      tx.moveCall({
-        package: data?.package,
-        package: data?.package,
-        module: data?.module,
-        typeArguments: data?.typeArguments,
-        function: data?.function,
-        arguments: [
-          tx.object(data?.arguments?.[0]),
-          tx.object(data?.arguments?.[1]),
-          tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]))),
-          tx.object(coin),
-        ],
-        gasBudget: 1000000000,
-      });
-      signAndExecuteTransaction(
-        {
-          transaction: tx,
+      const response = await fetch('https://fullnode.mainnet.sui.io/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'client-sdk-type': 'typescript',
+          'client-sdk-version': '1.7.0',
+          'client-target-api-version': '1.32.0',
         },
-        {
-          onSuccess: (result) => {
-            console.log('Transaction executed:', result);
-            openSnackbar('success', 'Transaction successful');
-            setDigest(result.digest);
-            postDigest(result.digest);
-            setError('');
-          },
-          onError: (err) => {
-            console.error('Transaction failed:', err);
-            setError(err.message);
-          },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'suix_getCoins',
+          params: [
+            currentAccount.address,
+            isBuyMode ? agentDetail.parentId : agentDetail.tickerId,
+          ],
+        }),
+      });
+      const mergeData = await response.json();
+      if (mergeData.result) {
+        const totalBalance = mergeData.result.data.reduce((sum, coin) => {
+          return sum + parseFloat(coin.balance);
+        }, 0);
+
+        const allCoins = mergeData.result.data.map((coin) => coin.coinObjectId);
+        const primaryCoin = allCoins[0]; // Choose the first coin as the primary
+        const coinsToMerge = allCoins.slice(1); // Use the rest for merging
+
+        if (totalBalance > parseFloat(amount * 1000000)) {
+          if (coinsToMerge.length > 0) {
+            tx.mergeCoins(
+              tx.object(primaryCoin),
+              coinsToMerge.map((coin) => tx.object(coin))
+            );
+          }
         }
-      );
+
+        const [coin] = tx.splitCoins(primaryCoin, [
+          tx.pure.u64(BigInt(parseFloat(amount * 1000000))),
+        ]);
+        tx.moveCall({
+          package: data?.package,
+          package: data?.package,
+          module: data?.module,
+          typeArguments: data?.typeArguments,
+          function: data?.function,
+          arguments: [
+            tx.object(data?.arguments?.[0]),
+            tx.object(data?.arguments?.[1]),
+            tx.pure.u64(BigInt(parseFloat(data?.arguments?.[2]))),
+            tx.object(coin),
+          ],
+          gasBudget: 1000000000,
+        });
+        signAndExecuteTransaction(
+          {
+            transaction: tx,
+          },
+          {
+            onSuccess: (result) => {
+              openSnackbar('success', 'Transaction successful');
+              setDigest(result.digest);
+              postDigest(result.digest);
+              setError('');
+            },
+            onError: (err) => {
+              console.error('Transaction failed:', err);
+              setError(err.message);
+            },
+          }
+        );
+      }
     } catch (err) {
       console.error('Failed to create transaction:', err);
       setError(err.message);
