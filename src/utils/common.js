@@ -58,3 +58,21 @@ export function formatAddressInLeaderboard(address) {
   const end = address?.slice(-10); // Take the last 10 characters.
   return `${start}...${end}`; // Concatenate with ellipsis.
 }
+export const getFormattedDate = (inputDate) => {
+  try {
+    const date = inputDate instanceof Date ? inputDate : new Date(inputDate);
+
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
+  }
+};

@@ -11,7 +11,6 @@ import FilterTabs from '../src/component/Filters/TabFilters';
 
 export default function Home() {
   const isMobile = useMediaQuery('(max-width:768px)');
-  console.log(isMobile, 'isMobile');
   const [tradeResult, setTradeResult] = useState();
 
   useQuery({

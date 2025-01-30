@@ -10,7 +10,7 @@ import {
   useSignAndExecuteTransaction,
 } from '@mysten/dapp-kit';
 
-const TradeComponent = ({ agentDetail }) => {
+const TradeComponent = ({ agentDetail, graphData }) => {
   const { openSnackbar } = useSnackbar();
   const [orderId, setOrderId] = useState('');
   let globalOrderId;
@@ -66,7 +66,6 @@ const TradeComponent = ({ agentDetail }) => {
         localStorage.getItem('guestAccessToken'))
     ) {
       let token = localStorage.getItem('accessToken');
-      console.log('🚀 ~ getToken ~ token:', token);
 
       if (!!!token) {
         let guestAccesToken = localStorage.getItem('guestAccessToken');
@@ -359,7 +358,7 @@ const TradeComponent = ({ agentDetail }) => {
           )}
         </button>
       </div>
-      <BondingCurve />
+      <BondingCurve graphData={graphData} />
     </div>
   );
 };
