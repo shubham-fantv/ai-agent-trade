@@ -208,7 +208,7 @@ const RevampHeader = ({ app }) => {
                   <img
                     src={'/images/ai/aiNationLogo.png'}
                     style={{ height: '40px', width: '180px' }}
-                    alt='mobile FanTV logo'
+                    alt='mobile AI Nation logo'
                     loading='eager'
                     decoding='async'
                   />
@@ -217,7 +217,7 @@ const RevampHeader = ({ app }) => {
                 <Box className='fan__tigerDekstopLogo'>
                   <img
                     src={'/images/ai/aiNationLogo.png'}
-                    alt='FanTV Logo'
+                    alt='AI Nation Logo'
                     width={200}
                     height={100}
                     style={{ height: '60px', width: '290px' }}
