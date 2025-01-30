@@ -81,13 +81,13 @@ export default function AgentDetails({ agentDetail, agentId }) {
         <div className='min-h-screen bg-[#222222]'>
           <div className='mt-6 max-w-7xl'>
             <h4 className='mb-2 font-bold'>Recent Trades</h4>
-            <TradeTable />
+            <TradeTable agentDetail={agentDetail} />
           </div>
         </div>
       ),
     },
     {
-      id: 0,
+      id: 1,
       label: 'Summary',
       component: (
         <div className='mt-6'>
@@ -113,6 +113,8 @@ export default function AgentDetails({ agentDetail, agentId }) {
   ];
 
   const [tab, setTab] = useState(tabs[0]);
+  const [graphData, setGraphData] = useState(null);
+
   return (
     <div className='min-h-screen bg-[#1A1A1A] text-white pt-24 px-4 sm:px-6'>
       <Head>
@@ -251,16 +253,17 @@ export default function AgentDetails({ agentDetail, agentId }) {
 
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-3'>
           <div className='col-span-2'>
-            <Graph agentDetail={agentDetail} />
+            {/* GRAPH */}
+            <Graph agentDetail={agentDetail} setGraphData={setGraphData} />
             <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6'>
               {/* Tabs */}
               <div className='flex space-x-4 border-b border-white/10'>
-                {/* <TabButton
+                <TabButton
                   isActive={tab.label === tabs[0].label}
                   onClick={() => setTab(tabs[0])}
                 >
                   Trades
-                </TabButton> */}
+                </TabButton>
                 <TabButton
                   isActive={tab.label === tabs[1].label}
                   onClick={() => setTab(tabs[1])}
@@ -281,10 +284,10 @@ export default function AgentDetails({ agentDetail, agentId }) {
                   ))}
                 </div>
               )}
-              {tabs[1].component}
+              {tab.component}
             </div>
           </div>
-          <TradeComponent agentDetail={agentDetail} />
+          <TradeComponent agentDetail={agentDetail} graphData={graphData} />
         </div>
       </div>
     </div>

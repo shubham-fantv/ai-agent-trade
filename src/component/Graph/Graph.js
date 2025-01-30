@@ -6,7 +6,7 @@ import { FANTV_API_URL } from '@/src/constant/constants';
 
 const POLLING_INTERVAL = 2000; // 2 seconds in milliseconds
 
-const Graph = ({ agentDetail }) => {
+const Graph = ({ agentDetail, setGraphData }) => {
   const [noData, setNoData] = useState(false);
   const [candlestickData, setCandlestickData] = useState([]);
   const [lastTimestamp, setLastTimestamp] = useState(null);
@@ -25,6 +25,11 @@ const Graph = ({ agentDetail }) => {
       const prices = json?.data?.price;
       const volumes = json?.data?.volume;
 
+      setGraphData({
+        bondingCurve: json?.data?.bondingCurveTxt,
+        poolCoin: json?.data?.poolCoin,
+        poolSui: json?.data?.poolSui,
+      });
       if (!prices?.length || !volumes?.length) {
         setNoData(true);
         return;
@@ -431,8 +436,6 @@ V: ${volume.value.toFixed(2)}`;
       };
     }
   }, [candlestickData]);
-
-  console.log(agentDetail?.tickerId);
 
   return (
     <div className='bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6 h-[530px] mb-6 relative'>

@@ -1,109 +1,71 @@
 'use client';
-import React, { useState } from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { FANTV_API_URL } from '../../../src/constant/constants';
+import { formatWalletAddress, getFormattedDate } from '../../utils/common';
 
-// Static dummy data
-const TRANSACTIONS_DATA = [
-  {
-    id: '1',
-    account: '0x46ef43',
-    type: 'BUY',
-    suai: '2122333',
-    aida: '102511664',
-    date: '1 months ago',
-    transactionId: '7g2KmY',
-  },
-  {
-    id: '2',
-    account: 'edelarandreazza',
-    type: 'BUY',
-    suai: '1000',
-    aida: '64816',
-    date: '1 months ago',
-    transactionId: '2F5WTM',
-  },
-  {
-    id: '3',
-    account: '0x46ef43',
-    type: 'BUY',
-    suai: '4933',
-    aida: '320048',
-    date: '1 months ago',
-    transactionId: 'HFKy5n',
-  },
-  {
-    id: '4',
-    account: '0xeff654',
-    type: 'BUY',
-    suai: '80632',
-    aida: '5304379',
-    date: '1 months ago',
-    transactionId: 'DVxRX9',
-  },
-  {
-    id: '5',
-    account: '0x77939b',
-    type: 'SALE',
-    suai: '11397',
-    aida: '773606',
-    date: '1 months ago',
-    transactionId: 'F1spna',
-  },
-  {
-    id: '6',
-    account: '0x46ef43',
-    type: 'BUY',
-    suai: '2122333',
-    aida: '102511664',
-    date: '1 months ago',
-    transactionId: '7g2KmY',
-  },
-  {
-    id: '7',
-    account: 'edelarandreazza',
-    type: 'BUY',
-    suai: '1000',
-    aida: '64816',
-    date: '1 months ago',
-    transactionId: '2F5WTM',
-  },
-  {
-    id: '8',
-    account: '0x46ef43',
-    type: 'BUY',
-    suai: '4933',
-    aida: '320048',
-    date: '1 months ago',
-    transactionId: 'HFKy5n',
-  },
-  {
-    id: '9',
-    account: '0xeff654',
-    type: 'BUY',
-    suai: '80632',
-    aida: '5304379',
-    date: '1 months ago',
-    transactionId: 'DVxRX9',
-  },
-  {
-    id: '10',
-    account: '0x77939b',
-    type: 'SALE',
-    suai: '11397',
-    aida: '773606',
-    date: '1 months ago',
-    transactionId: 'F1spna',
-  },
-];
+const TradeTable = ({ agentDetail }) => {
+  const [tradeHistory, setTradeHistory] = useState([]);
+  const [nextCursor, setNextCursor] = useState(null);
+  const [prevCursor, setPrevCursor] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentCursor, setCurrentCursor] = useState('');
+  const [hasNextPage, setHasNextPage] = useState(false);
 
-const TradeTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages] = useState(23);
+  useEffect(() => {
+    const fetchTradeHistory = async () => {
+      try {
+        const url = `${FANTV_API_URL}/v1/trade/history?ticker=${agentDetail?.ticker}`;
+        const response = await fetch(url);
+        const json = await response.json();
+
+        setTradeHistory(json?.data?.txnHistory);
+        setNextCursor(json?.data?.pageInfo?.nextCursor || null);
+        setPrevCursor(json?.data?.pageInfo?.prevCursor || null);
+        setTotalCount(json?.data?.pageInfo?.count);
+        setHasNextPage(json?.data?.pageInfo?.hasNext);
+      } catch (error) {
+        console.error('Error fetching trade history:', error);
+      }
+    };
+
+    fetchTradeHistory();
+  }, [agentDetail?.ticker]);
+
+  // Handle pagination
+  useEffect(() => {
+    const fetchPaginatedData = async () => {
+      if (currentCursor) {
+        try {
+          const url = `${FANTV_API_URL}/v1/trade/history?ticker=${agentDetail?.ticker}&cursor=${currentCursor}`;
+          const response = await fetch(url);
+          const json = await response.json();
+
+          setTradeHistory(json?.data?.txnHistory);
+          setNextCursor(json?.data?.pageInfo?.nextCursor || null);
+          setPrevCursor(json?.data?.pageInfo?.prevCursor || null);
+          setTotalCount(json?.data?.pageInfo?.count);
+          setHasNextPage(json?.data?.pageInfo?.hasNext);
+        } catch (error) {
+          console.error('Error fetching paginated data:', error);
+        }
+      }
+    };
+
+    fetchPaginatedData();
+  }, [currentCursor, agentDetail?.ticker]);
+
+  const handleNextPage = () => {
+    if (nextCursor) {
+      setCurrentCursor(nextCursor);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (prevCursor) {
+      setCurrentCursor(prevCursor);
+    }
+  };
 
   const AccountCell = ({ account }) => (
     <div className='flex items-center space-x-2'>
@@ -122,7 +84,9 @@ const TradeTable = () => {
           />
         </svg>
       </div>
-      <span className='font-mono text-blue-400'>{account}</span>
+      <span className='font-mono text-blue-400'>
+        {formatWalletAddress(account)}
+      </span>
     </div>
   );
 
@@ -130,36 +94,44 @@ const TradeTable = () => {
     <div className='bg-[#222222] text-white rounded-lg'>
       <table className='w-full'>
         <thead>
-          <tr className='text-gray-400 border-b border-gray-800'>
+          <tr className='w-full text-gray-400 border-b border-gray-800'>
             <th className='py-4 font-medium text-left'>ACCOUNT</th>
-            <th className='py-4 font-medium text-left'>TYPE</th>
-            <th className='py-4 font-medium text-left'>SUAI</th>
-            <th className='py-4 font-medium text-left'>AIDA</th>
-            <th className='py-4 font-medium text-left'>DATE</th>
+            <th className='py-4 font-medium text-center'></th>
+            <th className='py-4 font-medium text-right'>SUAI</th>
+            <th className='py-4 font-medium text-right'>
+              {agentDetail?.ticker}
+            </th>
+            <th className='py-4 font-medium text-center'>DATE</th>
             <th className='py-4 font-medium text-right'>TRANSACTION</th>
           </tr>
         </thead>
         <tbody>
-          {TRANSACTIONS_DATA.map((tx) => (
+          {tradeHistory?.map((tx) => (
             <tr
               key={tx.id}
               className='border-b border-gray-800/50 hover:bg-gray-800/20'
             >
-              <td className='py-4'>
-                <AccountCell account={tx.account} />
+              <td className='py-4 text-left'>
+                <AccountCell account={tx.sender} />
               </td>
               <td
-                className={`py-4 ${
+                className={`py-4 text-center ${
                   tx.type === 'BUY' ? 'text-cyan-400' : 'text-red-400'
                 }`}
               >
                 {tx.type}
               </td>
-              <td className='py-4 font-mono'>{tx.suai.toLocaleString()}</td>
-              <td className='py-4 font-mono'>{tx.aida.toLocaleString()}</td>
-              <td className='py-4 text-gray-400'>{tx.date}</td>
+              <td className='py-4 font-mono text-right'>
+                {tx?.suiAmount?.toLocaleString()}
+              </td>
+              <td className='py-4 font-mono text-right'>
+                {tx?.coinAmount?.toLocaleString()}
+              </td>
+              <td className='py-4 text-center text-gray-400'>
+                {getFormattedDate(tx.createdAt)}
+              </td>
               <td className='py-4 font-mono text-right text-gray-400'>
-                {tx.transactionId}
+                {formatWalletAddress(tx.digest.slice(0, 12))}
               </td>
             </tr>
           ))}
@@ -167,20 +139,24 @@ const TradeTable = () => {
       </table>
       <div className='flex items-center justify-center my-6'>
         <div className='flex items-center space-x-4'>
-          <button className='p-2 text-gray-400 hover:text-white'>
-            <ChevronsLeft size={20} />
-          </button>
-          <button className='p-2 text-gray-400 hover:text-white'>
+          <button
+            className={`p-2 text-gray-400 hover:text-white ${
+              !prevCursor && 'opacity-50 cursor-not-allowed'
+            }`}
+            disabled={!prevCursor}
+            onClick={handlePrevPage}
+          >
             <ChevronLeft size={20} />
           </button>
-          <span className='text-gray-400'>
-            {currentPage} / {totalPages}
-          </span>
-          <button className='p-2 text-gray-400 hover:text-white'>
+          <span className='text-gray-400'>{totalCount}</span>
+          <button
+            className={`p-2 text-gray-400 hover:text-white ${
+              !nextCursor && 'opacity-50 cursor-not-allowed'
+            }`}
+            disabled={!hasNextPage}
+            onClick={handleNextPage}
+          >
             <ChevronRight size={20} />
-          </button>
-          <button className='p-2 text-gray-400 hover:text-white'>
-            <ChevronsRight size={20} />
           </button>
         </div>
       </div>

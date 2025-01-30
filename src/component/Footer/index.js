@@ -28,7 +28,7 @@ const Footer = () => {
             >
               <img
                 src={'/images/ai/aiNationLogo.png'}
-                alt='FanTV Logo'
+                alt='AI Nation Logo'
                 width={200}
                 height={100}
                 style={{ height: '70px', width: '350px' }}
