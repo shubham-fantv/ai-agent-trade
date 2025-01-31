@@ -36,7 +36,7 @@ const BondingCurve = ({ graphData }) => {
           <div className='absolute inset-0 rounded-full bg-white/20 blur-sm'></div>
         </div>
       </div>
-      {percentage}%{/* Pool values */}
+      {percentage} %{/* Pool values */}
       {/* <div className='flex justify-between mt-2 text-xs text-gray-400'>
         <span>Pool SUI: {Number(graphData?.poolSui).toLocaleString()}</span>
         <span>Pool Coin: {Number(graphData?.poolCoin).toLocaleString()}</span>

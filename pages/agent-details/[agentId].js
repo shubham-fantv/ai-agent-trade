@@ -34,11 +34,6 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-const getCategoryByTag = (tag) => {
-  const agent = agents.find((agent) => agent.tag === tag);
-  return agent ? agent.category : 'Category not found';
-};
-
 const TabButton = ({ isActive, onClick, children }) => {
   return (
     <button
@@ -78,7 +73,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
       id: 0,
       label: 'Trades',
       component: (
-        <div className='min-h-screen bg-[#222222]'>
+        <div className='h-[auto] bg-[#222222]'>
           <div className='mt-6 max-w-7xl'>
             <h4 className='mb-2 font-bold'>Recent Trades</h4>
             <TradeTable agentDetail={agentDetail} />
@@ -118,7 +113,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
   return (
     <div className='min-h-screen bg-[#1A1A1A] text-white pt-24 px-4 sm:px-6'>
       <Head>
-        <title>Mona AI - Agent Details</title>
+        <title>{agentDetail?.name} AI - Agent Details</title>
         <meta name='description' content='Mona AI Agent Details' />
       </Head>
 
@@ -152,7 +147,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
               >
                 <img
                   src={agentDetail.profilePic}
-                  alt='Mona AI'
+                  alt='Agent_Profile'
                   className='rounded-xl w-full h-auto sm:w-[248px] sm:h-[248px]'
                 />
               </HtmlTooltip>
