@@ -95,7 +95,6 @@ const TradeTable = ({ agentDetail }) => {
     </div>
   );
 
-  console.log(tradeHistory, 'his');
   return (
     <div className='bg-[#222222] text-white rounded-lg'>
       <table className='w-full'>
