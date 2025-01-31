@@ -110,7 +110,6 @@ const TradeTable = ({ agentDetail }) => {
   );
 
   const MobileTradeCard = ({ tx }) => {
-    console.log(tx.transactionType === 'BUY', 'tx.transactionType');
     return (
       <div className='border-b border-gray-800/50'>
         <div
@@ -167,31 +166,35 @@ const TradeTable = ({ agentDetail }) => {
         {expandedRowId === tx._id && (
           <div className='grid grid-cols-2 gap-3 p-2 bg-gray-800/10'>
             <div className='flex flex-col p-3 rounded bg-gray-800/20'>
-              <span className='text-xs text-gray-400'>$MAN</span>
-              <span className='mt-1 font-mono text-sm'>
+              <span className='text-xs font-medium text-left font-nohemi text-[14px] leading-[21px]'>
+                $MAN
+              </span>
+              <span className='mt-1 font-medium text-left font-nohemi text-[14px] leading-[21px]'>
                 {tx?.suiAmount?.toLocaleString()}
               </span>
             </div>
             <div className='flex flex-col p-3 rounded bg-gray-800/20'>
-              <span className='text-xs text-gray-400'>
+              <span className='text-xs font-medium text-left font-nohemi text-[14px] leading-[21px]'>
                 {agentDetail?.ticker}
               </span>
-              <span className='mt-1 font-mono text-sm'>
+              <span className='mt-1 font-medium text-left font-nohemi text-[14px] leading-[21px]'>
                 {tx?.coinAmount?.toLocaleString()}
               </span>
             </div>
-            <div className='flex flex-col p-3 rounded bg-gray-800/20'>
+            {/* <div className='flex flex-col p-3 rounded bg-gray-800/20'>
               <span className='text-xs text-gray-400'>Date</span>
               <span className='mt-1 text-sm'>
                 {getFormattedDate(tx.createdAt)}
               </span>
-            </div>
+            </div> */}
             <div
               className='flex flex-col p-3 rounded cursor-pointer bg-gray-800/20'
               onClick={() => handleTradeClick(tx.digest)}
             >
-              <span className='text-xs text-gray-400'>Transaction</span>
-              <span className='mt-1 font-mono text-sm'>
+              <span className='text-xs font-medium text-left font-nohemi text-[14px] leading-[21px]'>
+                Transaction
+              </span>
+              <span className='mt-1 font-medium text-left font-nohemi text-[14px] leading-[21px]'>
                 {formatWalletAddress(tx.digest.slice(0, 12))}
               </span>
             </div>
@@ -215,46 +218,55 @@ const TradeTable = ({ agentDetail }) => {
         <table className='w-full'>
           <thead>
             <tr className='w-full text-gray-400 border-b border-gray-800'>
-              <th className='py-4 font-medium text-left'>ACCOUNT</th>
-              <th className='py-4 font-medium text-center'>TYPE</th>
-              <th className='py-4 font-medium text-right'>$MAN</th>
-              <th className='py-4 font-medium text-right'>
+              <th className='py-4 font-medium text-left font-nohemi text-[14px] leading-[21px]'>
+                ACCOUNT
+              </th>
+              <th className='py-4 font-medium text-center font-nohemi text-[14px] leading-[21px]'>
+                TYPE
+              </th>
+              <th className='py-4 font-medium text-center font-nohemi text-[14px] leading-[21px]'>
+                $MAN
+              </th>
+              <th className='py-4 font-medium text-center font-nohemi text-[14px] leading-[21px]'>
                 {agentDetail?.ticker}
               </th>
-              <th className='py-4 font-medium text-center'>DATE</th>
-              <th className='py-4 font-medium text-right'>TRANSACTION</th>
+              <th className='py-4 font-medium text-center font-nohemi text-[14px] leading-[21px]'></th>
+              <th className='py-4 font-medium text-center font-nohemi text-[14px] leading-[21px]'>
+                TRANSACTION
+              </th>
             </tr>
           </thead>
           <tbody>
             {tradeHistory?.map((tx) => (
               <tr
                 onClick={() => handleTradeClick(tx.digest)}
-                key={tx.id}
+                key={tx._id}
                 className='border-b cursor-pointer border-gray-800/50 hover:bg-gray-800/20'
               >
-                <td className='py-4 text-left'>
+                <td className='py-4 text-left font-nohemi text-[14px] font-normal leading-[21px]'>
                   <AccountCell account={tx.sender} />
                 </td>
                 <td
-                  className={`py-4 text-center ${
+                  className={`py-4 text-center font-nohemi text-[14px] font-normal
+leading-[21px] ${
                     tx.transactionType === 'BUY'
                       ? 'text-green-100'
                       : 'text-red-400'
-                  }`}
+                  }}`}
                 >
                   {tx.transactionType}
                 </td>
-                <td className='py-4 font-mono text-right'>
+                <td className='py-4 text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]'>
                   {tx?.suiAmount?.toLocaleString()}
                 </td>
-                <td className='py-4 font-mono text-right'>
+                <td className='py-4 text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]'>
                   {tx?.coinAmount?.toLocaleString()}
                 </td>
                 <td className='py-4 text-center text-gray-400'>
-                  {getFormattedDate(tx.createdAt)}
+                  {/* {getFormattedDate(tx.createdAt)} */}
                 </td>
-                <td className='py-4 font-mono text-right text-gray-400'>
-                  {formatWalletAddress(tx.digest.slice(0, 12))}
+                <td className='py-4 text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]'>
+                  {formatWalletAddress(tx.digest, 5)}
                 </td>
               </tr>
             ))}

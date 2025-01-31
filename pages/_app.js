@@ -25,10 +25,6 @@ const { networkConfig } = createNetworkConfig({
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }) {
-  // console.log = () => {};
-  // console.error = () => {};
-  // console.debug = () => {};
-
   return (
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork='mainnet'>

@@ -45,7 +45,7 @@ export function formatWalletAddress(input, charLength = 8) {
     input.length <= 10
   ) {
     console.warn('Invalid wallet address:', input);
-    return input; // Return the input as-is or an empty string to handle gracefully
+    // return input; // Return the input as-is or an empty string to handle gracefully
   }
 
   // Extract and return the formatted string

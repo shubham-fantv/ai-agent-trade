@@ -16,9 +16,7 @@ const TradeComponent = ({ agentDetail, graphData }) => {
   let globalOrderId;
   const [isBuyMode, setIsBuyMode] = useState(true);
   const [amount, setAmount] = useState('');
-  console.log('🚀 ~ TradeComponent ~ amount:', amount);
   const [receivedAmount, setReceivedAmount] = useState('');
-  console.log('🚀 ~ TradeComponent ~ receivedAmount:', receivedAmount);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tradeLoading, setTradeLoading] = useState(false);

@@ -203,7 +203,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                       viewBox='0 0 12 13'
                       fill='none'
                       xmlns='http://www.w3.org/2000/svg'
-                      onClick={() => copyToClipboard(agentDetail?.fieldObject)}
+                      onClick={() => copyToClipboard(agentDetail?.tickerId)}
                     >
                       <path
                         d='M5.85986 11.875H3.60986C1.53486 11.875 0.609863 10.95 0.609863 8.875V6.625C0.609863 4.55 1.53486 3.625 3.60986 3.625H5.85986C7.93486 3.625 8.85986 4.55 8.85986 6.625V8.875C8.85986 10.95 7.93486 11.875 5.85986 11.875ZM3.60986 4.375C1.94986 4.375 1.35986 4.965 1.35986 6.625V8.875C1.35986 10.535 1.94986 11.125 3.60986 11.125H5.85986C7.51986 11.125 8.10986 10.535 8.10986 8.875V6.625C8.10986 4.965 7.51986 4.375 5.85986 4.375H3.60986Z'
@@ -223,20 +223,20 @@ export default function AgentDetails({ agentDetail, agentId }) {
 
               <div className='grid grid-cols-1 gap-4 mt-6 sm:grid-cols-3'>
                 <div>
-                  <div className='mb-4 text-sm text-gray-400'>Market Cap</div>
+                  <div className='mb-1 text-sm text-gray-400'>Market Cap</div>
                   <div className='text-2xl font-bold'>
                     {agentDetail?.marketCap}
                   </div>
                 </div>
                 <div>
-                  <div className='mb-4 text-sm text-gray-400'>Price</div>
+                  <div className='mb-1 text-sm text-gray-400'>Price</div>
                   <div className='text-2xl font-bold'>
                     {' '}
                     {agentDetail?.price || '0.0$'}{' '}
                   </div>
                 </div>
                 <div>
-                  <div className='mb-4 text-sm text-gray-400'>24 hr vol.</div>
+                  <div className='mb-1 text-sm text-gray-400'>24 hr vol.</div>
                   <div className='text-2xl font-bold'>
                     {agentDetail.volume24}
                   </div>
