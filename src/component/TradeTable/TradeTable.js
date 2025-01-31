@@ -67,10 +67,15 @@ const TradeTable = ({ agentDetail }) => {
     }
   };
 
+  const handleTradeClick = (value) => {
+    const url = `https://suivision.xyz/txblock/${value}`;
+    window.open(url, '_blank');
+  };
+
   const AccountCell = ({ account }) => (
     <div className='flex items-center space-x-2'>
       <div className='w-6 h-6'>
-        <svg viewBox='0 0 24 24' className='w-full h-full text-blue-500'>
+        <svg viewBox='0 0 24 24' className='w-full h-full text-[#CCFF00]'>
           <rect
             width='24'
             height='24'
@@ -84,8 +89,8 @@ const TradeTable = ({ agentDetail }) => {
           />
         </svg>
       </div>
-      <span className='font-mono text-blue-400'>
-        {formatWalletAddress(account)}
+      <span className='font-mono text-[#CCFF00]'>
+        {formatWalletAddress(account, 5)}
       </span>
     </div>
   );
@@ -96,8 +101,8 @@ const TradeTable = ({ agentDetail }) => {
         <thead>
           <tr className='w-full text-gray-400 border-b border-gray-800'>
             <th className='py-4 font-medium text-left'>ACCOUNT</th>
-            <th className='py-4 font-medium text-center'></th>
-            <th className='py-4 font-medium text-right'>SUAI</th>
+            <th className='py-4 font-medium text-center'>TYPE</th>
+            <th className='py-4 font-medium text-right'>$MAN</th>
             <th className='py-4 font-medium text-right'>
               {agentDetail?.ticker}
             </th>
@@ -108,18 +113,21 @@ const TradeTable = ({ agentDetail }) => {
         <tbody>
           {tradeHistory?.map((tx) => (
             <tr
+              onClick={() => handleTradeClick(tx.digest)}
               key={tx.id}
-              className='border-b border-gray-800/50 hover:bg-gray-800/20'
+              className='border-b cursor-pointer border-gray-800/50 hover:bg-gray-800/20'
             >
               <td className='py-4 text-left'>
                 <AccountCell account={tx.sender} />
               </td>
               <td
                 className={`py-4 text-center ${
-                  tx.type === 'BUY' ? 'text-cyan-400' : 'text-red-400'
+                  tx.transactionType === 'BUY'
+                    ? 'text-cyan-400'
+                    : 'text-red-400'
                 }`}
               >
-                {tx.type}
+                {tx.transactionType}
               </td>
               <td className='py-4 font-mono text-right'>
                 {tx?.suiAmount?.toLocaleString()}

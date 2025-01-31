@@ -38,7 +38,7 @@ export const formatDateRange = (startDate, endDate) => {
   return `${formattedStart} - ${formattedEnd}`;
 };
 
-export function formatWalletAddress(input) {
+export function formatWalletAddress(input, charLength = 8) {
   if (
     typeof input !== 'string' ||
     !input.startsWith('0x') ||
@@ -49,7 +49,9 @@ export function formatWalletAddress(input) {
   }
 
   // Extract and return the formatted string
-  return `${input.slice(0, 8)}...${input.slice(input.length - 8)}`;
+  return `${input.slice(0, charLength)}...${input.slice(
+    input.length - charLength
+  )}`;
 }
 
 export function formatAddressInLeaderboard(address) {
