@@ -68,9 +68,7 @@ const TradeTable = ({ agentDetail }) => {
   };
 
   const handleTradeClick = (value) => {
-    console.log('click', value);
     const url = `https://suivision.xyz/txblock/${value}`;
-    console.log(url);
     window.open(url, '_blank');
   };
 
