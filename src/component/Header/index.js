@@ -245,7 +245,7 @@ const RevampHeader = ({ app }) => {
                       {label}
                     </Typography>
                   ))}
-                  <Typography
+                  {/* <Typography
                     variant="h6"
                     className="nav-item"
                     onClick={() => setOpen(true)}
@@ -257,7 +257,7 @@ const RevampHeader = ({ app }) => {
                     }}
                   >
                     Create agent
-                  </Typography>
+                  </Typography> */}
                   <Typography
                     onClick={() => openLink("https://marketplace.agentnation.xyz")}
                     variant="h6"
