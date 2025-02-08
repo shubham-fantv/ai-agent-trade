@@ -158,11 +158,15 @@ export default function AgentDetails({ agentDetail, agentId }) {
               <div className="flex flex-col justify-between gap-2 mb-3 sm:flex-row">
                 {isMobile ? (
                   <div className="flex">
-                    <img
-                      src={agentDetail.profilePic}
-                      alt="Agent_Profile"
-                      className="rounded-xl w-full h-auto w-[80px] h-[80px]"
-                    />
+                    <div style={{ height: "80px !important", width: "80px !important" }}>
+                      <img
+                        src={agentDetail.profilePic}
+                        alt="Agent_Profile"
+                        style={{ height: "80px !important", width: "80px !important" }}
+                        className="rounded-xl w-full h-auto w-[80px] h-[80px]"
+                      />
+                    </div>
+
                     <div className="ml-2">
                       <h2 className="text-xl font-bold">
                         {agentDetail?.name}{" "}

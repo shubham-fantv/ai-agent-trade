@@ -130,11 +130,11 @@ export default function Home() {
               <div className="grid grid-cols-7 text-sm mb-2 px-4 min-w-[1100px] overflow-x-auto">
                 <div className="text-center">AI Agents</div>
                 <div className=" ml-12 text-center">Category</div>
-                <div className="ml-12 text-center">Market Cap</div>
-                <div className="text-center">24 Chg</div>
-                <div className="text-center">TVL</div>
+                <div className="ml-12 text-center">Market Cap ($MAN)</div>
+                <div className="text-center">24H Chg</div>
+                <div className="text-center">TVL ($MAN)</div>
                 <div className="text-center">Holders</div>
-                <div className="text-center">24H vol.</div>
+                <div className="text-center">24H vol ($MAN)</div>
               </div>
             )}
 
@@ -144,11 +144,11 @@ export default function Home() {
                   <div className="grid grid-cols-7 text-sm mb-2 px-4 pt-4 min-w-[800px] overflow-x-auto">
                     <div className="text-center">AI Agents</div>
                     <div className="pl-24 text-center">Category</div>
-                    <div className="pl-14 text-center">24 Chg</div>
-                    <div className="text-center">TVL</div>
+                    <div className="ml-12 text-center">Market Cap ($MAN)</div>
+                    <div className=" text-center">24H Chg</div>
+                    <div className="text-center">TVL ($MAN)</div>
                     <div className="text-center">Holders</div>
-                    <div className="text-center">24H vol.</div>
-                    <div className=" text-center ">Market Cap</div>
+                    <div className="text-center">24H vol ($MAN)</div>
                   </div>
                 )}
 
