@@ -163,7 +163,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                         src={agentDetail.profilePic}
                         alt="Agent_Profile"
                         style={{ height: "80px !important", width: "80px !important" }}
-                        className="rounded-xl w-full h-auto w-[80px] h-[80px]"
+                        className="rounded-xl  h-auto w-[80px] h-[80px]"
                       />
                     </div>
 
