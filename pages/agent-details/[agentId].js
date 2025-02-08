@@ -13,6 +13,7 @@ import TradeTable from "../../src/component/TradeTable/TradeTable";
 import { formatWalletAddress } from "../../src/utils/common";
 import { agents } from "../trade";
 import CreateAgentModal from "../../src/component/CreateAgentModal";
+import { useMediaQuery } from "@mui/system";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -59,6 +60,8 @@ const TabButton = ({ isActive, onClick, children }) => {
 export default function AgentDetails({ agentDetail, agentId }) {
   const [copied, setCopied] = useState(false);
 
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -74,9 +77,9 @@ export default function AgentDetails({ agentDetail, agentId }) {
       id: 0,
       label: "Trades",
       component: (
-        <div className="min-h-screen bg-[#222222]">
+        <div className=" bg-[#222222]">
           <div className="mt-6 max-w-7xl">
-            <h4 className="mb-2 font-bold">Recent Trades</h4>
+            <h4 className="mb-2 font-nohemi font-bold">Recent Trades</h4>
             <TradeTable agentDetail={agentDetail} />
           </div>
         </div>
@@ -129,62 +132,113 @@ export default function AgentDetails({ agentDetail, agentId }) {
         </div>
 
         {/* Agent Info Card */}
-        <div className="bg-[#222222] rounded-xl p-6 mb-6">
+        <div className={`${isMobile ? "p-0" : "p-6"} bg-[#222222] rounded-xl  mb-6`}>
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-            <div className="relative sm:w-[248px] w-full mx-auto sm:mx-0 sm:flex-grow">
-              <HtmlTooltip
-                placement={"right"}
-                arrow={true}
-                title={
-                  <div>
-                    <Typography>{agentDetail?.ticker}</Typography>
-                    {agentDetail?.description}
-                  </div>
-                }
-              >
-                <img
-                  src={agentDetail.profilePic}
-                  alt="Agent_Profile"
-                  className="rounded-xl w-full h-auto sm:w-[248px] sm:h-[248px]"
-                />
-              </HtmlTooltip>
-            </div>
+            {!isMobile && (
+              <div className="relative sm:w-[248px] w-full mx-auto sm:mx-0 sm:flex-grow">
+                <HtmlTooltip
+                  placement={"right"}
+                  arrow={true}
+                  title={
+                    <div>
+                      <Typography>{agentDetail?.ticker}</Typography>
+                      {agentDetail?.description}
+                    </div>
+                  }
+                >
+                  <img
+                    src={agentDetail.profilePic}
+                    alt="Agent_Profile"
+                    className="rounded-xl w-full h-auto sm:w-[248px] sm:h-[248px]"
+                  />
+                </HtmlTooltip>
+              </div>
+            )}
             <div className="rounded-[24px] border-[2px] border-[#FFFFFF]/15 w-full w-full h-auto  sm:h-[246px]  sm:w-[1024px] p-6 sm:flex-grow">
-              <div className="flex flex-col items-center justify-between gap-2 mb-3 sm:flex-row">
-                <div className="flex items-center gap-2 mb-1">
-                  <h2 className="text-xl font-bold">{agentDetail?.name}</h2>
-                  <span className="text-xs px-2 py-0.5 rounded bg-[#333333] text-gray-400">
-                    {agentDetail?.ticker}
-                  </span>
-                </div>
-                <div className="flex gap-3">
-                  {agentDetail?.instagram && (
-                    <a
-                      href={agentDetail?.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
-                    >
-                      <Instagram className="w-4 h-4" />
-                    </a>
-                  )}
-                  {agentDetail?.twitter && (
-                    <a
-                      href={agentDetail?.twitter}
-                      className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
-                    >
-                      <Twitter className="w-4 h-4" />
-                    </a>
-                  )}
-                  {agentDetail?.discord && (
-                    <a
-                      href={agentDetail?.discord}
-                      className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
-                    >
-                      <Send className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
+              <div className="flex flex-col justify-between gap-2 mb-3 sm:flex-row">
+                {isMobile ? (
+                  <div className="flex">
+                    <img
+                      src={agentDetail.profilePic}
+                      alt="Agent_Profile"
+                      className="rounded-xl w-full h-auto w-[80px] h-[80px]"
+                    />
+                    <div className="ml-2">
+                      <h2 className="text-xl font-bold">
+                        {agentDetail?.name}{" "}
+                        <span className="text-xs  py-0.5 rounded  text-gray-400">
+                          ({agentDetail?.ticker})
+                        </span>
+                      </h2>
+
+                      <div className="flex gap-3 mt-1">
+                        {agentDetail?.instagram && (
+                          <a
+                            href={agentDetail?.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
+                          >
+                            <Instagram className="w-4 h-4" />
+                          </a>
+                        )}
+                        {agentDetail?.twitter && (
+                          <a
+                            href={agentDetail?.twitter}
+                            className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
+                          >
+                            <Twitter className="w-4 h-4" />
+                          </a>
+                        )}
+                        {agentDetail?.discord && (
+                          <a
+                            href={agentDetail?.discord}
+                            className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
+                          >
+                            <Send className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className="text-xl font-bold">{agentDetail?.name}</h2>
+                    <span className="text-xs px-2 py-0.5 rounded bg-[#333333] text-gray-400">
+                      {agentDetail?.ticker}
+                    </span>
+                  </div>
+                )}
+                {!isMobile && (
+                  <div className="flex gap-3">
+                    {agentDetail?.instagram && (
+                      <a
+                        href={agentDetail?.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
+                      >
+                        <Instagram className="w-4 h-4" />
+                      </a>
+                    )}
+                    {agentDetail?.twitter && (
+                      <a
+                        href={agentDetail?.twitter}
+                        className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
+                      >
+                        <Twitter className="w-4 h-4" />
+                      </a>
+                    )}
+                    {agentDetail?.discord && (
+                      <a
+                        href={agentDetail?.discord}
+                        className="p-2 rounded-full bg-[#333333] hover:bg-[#444444] transition-colors"
+                      >
+                        <Send className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-1 mb-3">
@@ -218,30 +272,83 @@ export default function AgentDetails({ agentDetail, agentId }) {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 mt-6 sm:grid-cols-3">
-                <div>
-                  <div className="mb-1 text-sm text-gray-400">Market Cap</div>
-                  <div className="text-2xl font-bold">{agentDetail?.marketCap}</div>
+              {isMobile ? (
+                <div className="grid grid-cols-3 gap-4 mt-6 ">
+                  <div>
+                    <div className="mb-1 text-sm text-gray-400">
+                      Market Cap
+                      <br /> ($MAN)
+                    </div>
+                    <div className="text-sm font-bold">{agentDetail?.marketCap}</div>
+                  </div>
+                  <div>
+                    <div className="mb-1 text-sm text-gray-400">
+                      Price <br /> ($MAN)
+                    </div>
+                    <div className="text-sm font-bold"> {agentDetail?.price || "0.0$"} </div>
+                  </div>
+                  <div>
+                    <div className="mb-1 text-sm text-gray-400">
+                      24 hr vol <br /> ($MAN)
+                    </div>
+                    <div className="text-sm font-bold">{agentDetail.volume24}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="mb-1 text-sm text-gray-400">Price</div>
-                  <div className="text-2xl font-bold"> {agentDetail?.price || "0.0$"} </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 mt-6 sm:grid-cols-3">
+                  <div>
+                    <div className="mb-1 text-sm text-gray-400">Market Cap ($MAN)</div>
+                    <div className="text-sm font-bold">{agentDetail?.marketCap}</div>
+                  </div>
+                  <div>
+                    <div className="mb-1 text-sm text-gray-400">Price ($MAN)</div>
+                    <div className="text-sm font-bold"> {agentDetail?.price || "0.0$"} </div>
+                  </div>
+                  <div>
+                    <div className="mb-1 text-sm text-gray-400">24 hr vol ($MAN)</div>
+                    <div className="text-sm font-bold">{agentDetail.volume24}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="mb-1 text-sm text-gray-400">24 hr vol.</div>
-                  <div className="text-2xl font-bold">{agentDetail.volume24}</div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className={`${isMobile ? "gap-0" : "gap-6"} grid grid-cols-1 gap-6 sm:grid-cols-3`}>
           <div className="col-span-2">
-            {/* GRAPH */}
             <Graph agentDetail={agentDetail} setGraphData={setGraphData} />
-            <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
-              {/* Tabs */}
+            {isMobile ? (
+              <TradeComponent agentDetail={agentDetail} graphData={graphData} />
+            ) : (
+              <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 rounded-xl p-6">
+                <div className="flex space-x-4 border-b border-white/10">
+                  <TabButton isActive={tab.label === tabs[0].label} onClick={() => setTab(tabs[0])}>
+                    Trades
+                  </TabButton>
+                  <TabButton isActive={tab.label === tabs[1].label} onClick={() => setTab(tabs[1])}>
+                    What does it do
+                  </TabButton>
+                </div>
+                {agentDetail?.aiAgents && (
+                  <div className="bg-[#1E1E1E] flex gap-2 rounded-[24px] p-2 w-full overflow-x-scroll">
+                    {agentDetail?.aiAgents.map((agent, index) => (
+                      <div key={i} className="relative shrink-0">
+                        <img
+                          src={agentDetail?.profilePic}
+                          alt="Mona AI"
+                          className="rounded-[24px] w-[116px] h-[113px]"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {tab.component}
+              </div>
+            )}
+          </div>
+
+          {isMobile ? (
+            <div className="bg-[#222222] border-[2px] border-[#FFFFFF]/15 gap-0 rounded-xl p-6">
               <div className="flex space-x-4 border-b border-white/10">
                 <TabButton isActive={tab.label === tabs[0].label} onClick={() => setTab(tabs[0])}>
                   Trades
@@ -265,8 +372,9 @@ export default function AgentDetails({ agentDetail, agentId }) {
               )}
               {tab.component}
             </div>
-          </div>
-          <TradeComponent agentDetail={agentDetail} graphData={graphData} />
+          ) : (
+            <TradeComponent agentDetail={agentDetail} graphData={graphData} />
+          )}
         </div>
       </div>
     </div>

@@ -15,16 +15,16 @@ import CreateAgentModal from "../CreateAgentModal";
 
 const LogOutNavItem = [
   {
-    path: "/airdrop",
-    title: "Airdrop",
-    icon: "/images/fantv/menu/reward.svg",
-    newTag: false,
-  },
-  {
     path: "/",
-    title: "Whitepaper",
+    title: "Build",
     icon: "/images/fantv/menu/reward.svg",
     newTag: true,
+  },
+  {
+    path: "https://marketplace.agentnation.xyz/",
+    title: "Marketplace",
+    icon: "/images/fantv/menu/reward.svg",
+    newTag: false,
   },
 ];
 
@@ -108,7 +108,7 @@ const RevampHeader = ({ app }) => {
             borderBottom: "1px solid #333333",
           }}
         >
-          <Box sx={styles.pointContainer}>
+          {/* <Box sx={styles.pointContainer}>
             <img
               style={{ width: "24px", height: "24px", marginRight: "8px" }}
               src="/images/seasonIcon.png"
@@ -125,7 +125,7 @@ const RevampHeader = ({ app }) => {
             >
               {airdropPoints}
             </Typography>
-          </Box>
+          </Box> */}
         </Box>
         {LogOutNavItem?.map((item, i) => (
           <Link key={i} prefetch={false} href={item?.path} passHref>
@@ -143,7 +143,7 @@ const RevampHeader = ({ app }) => {
                 variant="h6"
                 className="nav-item"
                 sx={{
-                  color: router.pathname === item?.path ? "#FFD700" : "#FFFFFF", // Highlight active item
+                  color: "#FFFFFF", // Highlight active item
                   fontFamily: "Nohemi",
                   fontSize: "16px",
                   fontWeight: 500,
@@ -270,7 +270,36 @@ const RevampHeader = ({ app }) => {
                       cursor: "pointer",
                     }}
                   >
-                    Hire
+                    Marketplace
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    className="nav-item"
+                    sx={{
+                      color: "#FFF",
+                      display: "flex",
+                      fontFamily: "Nohemi",
+                      fontSize: "16px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Build
+                    <Box
+                      sx={{
+                        marginLeft: "10px",
+                        height: "max-content",
+                        backgroundColor: "#FF5722", // Accent color
+                        padding: "2px 5px",
+                        borderRadius: "10px",
+                        fontSize: "8px",
+                        fontWeight: 700,
+                        color: "#FFFFFF",
+                        textAlign: "center",
+                        display: "inline-block",
+                      }}
+                    >
+                      Coming Soon
+                    </Box>
                   </Typography>
                 </Box>
               </Box>
@@ -291,7 +320,7 @@ const RevampHeader = ({ app }) => {
                     },
                   }}
                 >
-                  {formatWalletAddress(walletState?.address)}
+                  {formatWalletAddress(walletState?.address, 4)}
                 </Button>
               ) : (
                 <Button
@@ -307,6 +336,12 @@ const RevampHeader = ({ app }) => {
             </Box>
             <WalletConnectModal anchorEl={walletAnchorEl} onClose={handleWalletClose} />
           </Box>
+          {isMobile && (
+            <Box sx={styles.profileNavBar} onClick={toggleDrawer(true)}>
+              <img src="/images/menu.svg" />
+            </Box>
+          )}
+
           {/* )} */}
           <Drawer anchor="right" open={isMenuOpen} onClose={toggleDrawer(false)}>
             {drawerContent}
