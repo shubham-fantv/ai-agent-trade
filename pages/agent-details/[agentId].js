@@ -111,7 +111,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
   const [graphData, setGraphData] = useState(null);
 
   return (
-    <div className="min-h-screen bg-[#1A1A1A] text-white pt-24 px-4 sm:px-6">
+    <div className="min-h-screen bg-[#1A1A1A] text-white pt-14 sm:pt-24 px-4 sm:px-6">
       <Head>
         <title>{agentDetail?.name} AI - Agent Details</title>
         <meta name="description" content="Mona AI Agent Details" />
@@ -119,15 +119,15 @@ export default function AgentDetails({ agentDetail, agentId }) {
 
       <div className="max-w-screen-xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-2 my-5">
+        <div className="flex items-center gap-2 mt-3 mb-4">
           <Link href="/" className="hover:opacity-80">
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <h1
-            className="text-xl font-bold text-center sm:text-left"
+            className="text-xl uppercase font-bold text-center sm:text-left"
             style={{ fontFamily: "BricolageGrotesque" }}
           >
-            AGENT DETAILS
+            Trade Agent
           </h1>
         </div>
 
@@ -208,7 +208,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                 ) : (
                   <div className="flex items-center gap-2 mb-1">
                     <h2 className="text-xl font-bold">{agentDetail?.name}</h2>
-                    <span className="text-xs px-2 py-0.5 rounded bg-[#333333] text-gray-400">
+                    <span className="text-xs font-normal py-0.5 rounded text-gray-400">
                       {agentDetail?.ticker}
                     </span>
                   </div>
@@ -246,7 +246,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
               </div>
 
               <div className="flex items-center gap-1 mb-3">
-                <div className="w-full sm:w-[auto] h-[32px] px-2 text-[14px] text-[#CCFF00] bg-[#353B1A] flex justify-between items-center gap-1 border-[2px] border-[#CCFF00]/30 rounded-[8px] m-[1px]">
+                <div className="w-full sm:w-[auto] h-[32px] px-2 font-normal   text-[14px] text-[#CCFF00] bg-[#353B1A] flex justify-between items-center gap-2 border-[2px] border-[#CCFF00]/30 rounded-[12px] m-[1px]">
                   {formatWalletAddress(agentDetail?.tickerId)}
                   {copied ? (
                     <span className="text-xs">Copied!</span>
@@ -271,7 +271,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                     </svg>
                   )}
                 </div>
-                <span className="h-[32px] w-full sm:w-[125px] text-[12px] rounded-[12px] border-[1px] border-[#FFFFFF]/30 flex justify-center items-center">
+                <span className="h-[32px] w-full sm:w-[125px] font-normal  text-[12px] rounded-[12px] border-[1px] border-[#FFFFFF]/30 flex justify-center items-center">
                   {agentDetail?.category}
                 </span>
               </div>
@@ -302,15 +302,27 @@ export default function AgentDetails({ agentDetail, agentId }) {
                 <div className="grid grid-cols-1 gap-4 mt-6 sm:grid-cols-3">
                   <div>
                     <div className="mb-1 text-sm text-gray-400">Market Cap ($MAN)</div>
-                    <div className="text-sm font-bold">{agentDetail?.marketCap}</div>
+                    <div
+                      sx={{
+                        fontFamily: "Bricolage Grotesque",
+                      }}
+                      className="text-[40px] font-[BricolageGrotesque] mt-6 text[#FFA0FF]  font-bold"
+                    >
+                      {agentDetail?.marketCap}
+                    </div>
                   </div>
                   <div>
                     <div className="mb-1 text-sm text-gray-400">Price ($MAN)</div>
-                    <div className="text-sm font-bold"> {agentDetail?.price || "0.0$"} </div>
+                    <div className="text-[40px] mt-6 font-bold  text-[#FE964A] font-[BricolageGrotesque]">
+                      {" "}
+                      {agentDetail?.price || "0.0$"}{" "}
+                    </div>
                   </div>
                   <div>
                     <div className="mb-1 text-sm text-gray-400">24 hr vol ($MAN)</div>
-                    <div className="text-sm font-bold">{agentDetail.volume24}</div>
+                    <div className="text-[40px] mt-6 font-bold text-[#ADFFE4] font-[BricolageGrotesque]">
+                      {agentDetail.volume24}
+                    </div>
                   </div>
                 </div>
               )}

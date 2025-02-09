@@ -46,14 +46,19 @@ export default function Home() {
   }, [activeTab, tradeResult]);
 
   return (
-    <div className="min-h-screen bg-[#1E1E1E] text-white pt-24">
+    <div className="min-h-screen bg-[#1E1E1E] text-white pt-16 sm:pt-24">
       <Head>
         <title>Trade AI Agents</title>
         <meta name="description" content="Trade AI Agents Platform" />
       </Head>
 
       <main className="max-w-[1400px] mx-auto">
-        <h1 className="mb-6 text-2xl font-semibold text-center">Trade AI Agents</h1>
+        <h1 className="gradient-text mb-2 text-3xl sm:text-5xl font-[Tiny] font-semibold uppercase text-center bg-gradient-to-r text-transparent bg-clip-text tracking-widest custom-gradient">
+          Trade AI Agents
+        </h1>
+        <h4 className="mb-6 text-lg sm:text-2xl font-[Tiny] font-normal uppercase text-center px-4">
+          Hire ready to use AI Agents to automate tasks, boost productivity, ease your life.{" "}
+        </h4>
 
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b p-4 pb-8 from-[#CCFF00]/50 to-[#1E1E1E] min-h-[500px]">
           <div className="absolute inset-0 bg-[url('/images/ai/home-bg.png')] bg-cover bg-center opacity-50 z-0"></div>
@@ -267,8 +272,9 @@ export default function Home() {
                         &nbsp; {agent.category}
                       </div>
                       <div
-                        className={`${isMobile ? "ml-[60px]" : "ml-12"} text-center
-text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]`}
+                        className={`${
+                          isMobile ? "ml-[60px]" : "ml-12"
+                        } text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]`}
                       >
                         {agent?.marketCap}
                       </div>
