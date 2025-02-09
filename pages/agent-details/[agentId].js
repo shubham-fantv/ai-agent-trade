@@ -306,7 +306,7 @@ export default function AgentDetails({ agentDetail, agentId }) {
                       sx={{
                         fontFamily: "Bricolage Grotesque",
                       }}
-                      className="text-[40px] font-[BricolageGrotesque] mt-6 text[#FFA0FF]  font-bold"
+                      className="text-[40px] font-[BricolageGrotesque] mt-6 text-[#FFA0FF]  font-bold"
                     >
                       {agentDetail?.marketCap}
                     </div>
