@@ -56,7 +56,7 @@ export default function Home() {
         <h1 className="gradient-text mb-2 text-3xl sm:text-[40px] font-[Tiny] font-semibold uppercase text-center bg-gradient-to-r text-transparent bg-clip-text tracking-widest custom-gradient">
           Trade AI Agents
         </h1>
-        <h4 className="mb-6 text-lg sm:text-[20px] font-[Tiny] font-normal uppercase text-center px-4 leading-[20px]">
+        <h4 className="mb-6 pt-2 text-lg sm:text-[20px] font-[nohemi] font-normal  text-center px-4 leading-[20px]">
           Hire ready to use AI Agents to automate tasks, boost productivity, ease your life.{" "}
         </h4>
 

@@ -124,8 +124,8 @@ export default function AgentDetails({ agentDetail, agentId }) {
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <h1
-            className="text-lg sm:text-xl mb-2 sm:mb-0 uppercase font-bold text-center sm:text-left"
-            style={{ fontFamily: "BricolageGrotesque" }}
+            className="text-base sm:text-lg mb-2 sm:mb-0 uppercase font-bold text-center sm:text-left"
+            style={{ fontFamily: "nohemi" }}
           >
             Buy / Sell Agent
           </h1>
