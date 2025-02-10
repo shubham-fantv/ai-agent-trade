@@ -119,20 +119,20 @@ export default function AgentDetails({ agentDetail, agentId }) {
 
       <div className="max-w-screen-xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-2 mt-3 mb-4">
+        <div className="flex items-center gap-2 mt-3 mb-0">
           <Link href="/" className="hover:opacity-80">
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <h1
-            className="text-xl uppercase font-bold text-center sm:text-left"
+            className="text-lg sm:text-xl mb-2 sm:mb-0 uppercase font-bold text-center sm:text-left"
             style={{ fontFamily: "BricolageGrotesque" }}
           >
-            Trade Agent
+            Buy / Sell Agent
           </h1>
         </div>
 
         {/* Agent Info Card */}
-        <div className={`${isMobile ? "p-0" : "p-6"} bg-[#222222] rounded-xl  mb-6`}>
+        <div className={`${isMobile ? "p-0" : "p-6"} rounded-xl  mb-6`}>
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
             {!isMobile && (
               <div className="relative sm:w-[248px] w-full mx-auto sm:mx-0 sm:flex-grow">
@@ -170,9 +170,18 @@ export default function AgentDetails({ agentDetail, agentId }) {
                     <div className="ml-2">
                       <h2 className="text-xl font-bold">
                         {agentDetail?.name}{" "}
-                        <span className="text-xs  py-0.5 rounded  text-gray-400">
-                          ({agentDetail?.ticker})
-                        </span>
+                        <span className="text-xs self-end  py-0.5 rounded  text-gray-400">
+                          {agentDetail?.ticker}
+                        </span>{" "}
+                        &nbsp;
+                        {agentDetail.hireAgent && (
+                          <a
+                            href={agentDetail.hireAgent}
+                            className="text-xs self-end  pb-1 cursor-pointer underline rounded  text-[#CCFF00]"
+                          >
+                            (See in Action)
+                          </a>
+                        )}
                       </h2>
 
                       <div className="flex gap-3 mt-1">
@@ -207,10 +216,18 @@ export default function AgentDetails({ agentDetail, agentId }) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className="text-xl font-bold">{agentDetail?.name}</h2>
-                    <span className="text-xs font-normal py-0.5 rounded text-gray-400">
+                    <h2 className="text-xl self-end font-bold">{agentDetail?.name}</h2>
+                    <span className="text-xs font-normal self-end pb-1 rounded text-gray-400">
                       {agentDetail?.ticker}
                     </span>
+                    {agentDetail.hireAgent && (
+                      <a
+                        href={agentDetail.hireAgent}
+                        className="text-xs self-end  pb-1 cursor-pointer underline rounded  text-[#CCFF00]"
+                      >
+                        (See in Action)
+                      </a>
+                    )}
                   </div>
                 )}
                 {!isMobile && (

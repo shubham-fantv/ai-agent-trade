@@ -53,10 +53,10 @@ export default function Home() {
       </Head>
 
       <main className="max-w-[1400px] mx-auto">
-        <h1 className="gradient-text mb-2 text-3xl sm:text-5xl font-[Tiny] font-semibold uppercase text-center bg-gradient-to-r text-transparent bg-clip-text tracking-widest custom-gradient">
+        <h1 className="gradient-text mb-2 text-3xl sm:text-[40px] font-[Tiny] font-semibold uppercase text-center bg-gradient-to-r text-transparent bg-clip-text tracking-widest custom-gradient">
           Trade AI Agents
         </h1>
-        <h4 className="mb-6 text-lg sm:text-2xl font-[Tiny] font-normal uppercase text-center px-4">
+        <h4 className="mb-6 text-lg sm:text-[20px] font-[Tiny] font-normal uppercase text-center px-4 leading-[20px]">
           Hire ready to use AI Agents to automate tasks, boost productivity, ease your life.{" "}
         </h4>
 
@@ -132,10 +132,10 @@ export default function Home() {
 
             {/* Horizontally scrollable header */}
             {!isMobile && (
-              <div className="grid grid-cols-7 text-sm mb-2 px-4 min-w-[1100px] overflow-x-auto">
-                <div className="text-center">AI Agents</div>
-                <div className=" ml-12 text-center">Category</div>
-                <div className="ml-12 text-center">Market Cap ($MAN)</div>
+              <div className="grid grid-cols-8 text-sm mb-2 px-4 min-w-[1100px] overflow-x-auto">
+                <div className="text-center col-span-2">AI Agents</div>
+                <div className="  text-center">Category</div>
+                <div className="text-center">Market Cap ($MAN)</div>
                 <div className="text-center">24H Chg</div>
                 <div className="text-center">TVL ($MAN)</div>
                 <div className="text-center">Holders</div>
@@ -146,10 +146,10 @@ export default function Home() {
             <div className="rounded-xl overflow-x-auto bg-[#1E1E1E] backdrop-blur-sm text-sm">
               <div className={`min-w-[1100px]`}>
                 {isMobile && (
-                  <div className="grid grid-cols-7 text-sm mb-2 px-4 pt-4 min-w-[800px] overflow-x-auto">
-                    <div className="text-center">AI Agents</div>
-                    <div className="pl-24 text-center">Category</div>
-                    <div className="ml-12 text-center">Market Cap ($MAN)</div>
+                  <div className="grid grid-cols-8 text-sm mb-2 px-4 pt-4 min-w-[800px] overflow-x-auto">
+                    <div className="text-center col-span-2">AI Agents</div>
+                    <div className=" text-center">Category</div>
+                    <div className=" text-center">Market Cap ($MAN)</div>
                     <div className=" text-center">24H Chg</div>
                     <div className="text-center">TVL ($MAN)</div>
                     <div className="text-center">Holders</div>
@@ -161,11 +161,11 @@ export default function Home() {
                   return (
                     <a
                       key={agent?.id}
-                      className={`grid grid-cols-7 px-4 py-4 items-center hover:bg-black/20 transition-colors
+                      className={`grid grid-cols-8 px-4 py-4 items-center hover:bg-black/20 transition-colors
                     ${idx !== 0 ? "border-t border-white/5" : ""}`}
                       href={`/agent-details/${agent._id}`}
                     >
-                      <div className="flex items-center justify-start col-span-1">
+                      <div className="flex items-center justify-start col-span-2">
                         <div className="flex items-center gap-3">
                           <img
                             src={agent.profilePic}
@@ -203,6 +203,7 @@ export default function Home() {
                                   mask="url(#path-4-inside-1_23042_3399)"
                                 />
                               </svg>
+                              &nbsp;
                               <svg
                                 width="18"
                                 height="18"
@@ -265,16 +266,12 @@ export default function Home() {
                         </div>
                       </div>
                       <div
-                        className={`${
-                          isMobile ? "pl-[90px]" : "pl-4"
-                        } text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]`}
+                        className={`text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]`}
                       >
                         &nbsp; {agent.category}
                       </div>
                       <div
-                        className={`${
-                          isMobile ? "ml-[60px]" : "ml-12"
-                        } text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]`}
+                        className={` text-center text-[#D2D2D2] font-nohemi text-[14px] font-normal leading-[21px]`}
                       >
                         {agent?.marketCap}
                       </div>
